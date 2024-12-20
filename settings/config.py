@@ -19,6 +19,13 @@ class DB_SETTINGS:
     DB_NAME_WEB: str = os.getenv('DB_NAME_WEB')
 
 
+class BOT_EMAIL_SETTINGS:
+    """Почта бота."""
+    EMAIL_SERVER: str = os.getenv("EMAIL_SERVER")
+    BOT_EMAIL_LOGIN_1: str = os.getenv("BOT_EMAIL_LOGIN_1")
+    BOT_EMAIL_PSWD_1: str = os.getenv("BOT_EMAIL_PSWD_1")
+
+
 class PORTAL_TP_SETTINGS:
     """Данные ЛК ПорталТП."""
     PERSONAL_AREA_ID: int = 1
@@ -75,10 +82,6 @@ class SK_TATARSTAN_SETTINGS:
 class RZD_SETTINGS:
     """Данные ЛК РЖД."""
     PERSONAL_AREA_ID: int = 4
-
-    PBK_USER_LOGIN_1: str = os.getenv('RZD_PBK_USER_LOGIN_1')
-    PBK_USER_PSWD_1: str = os.getenv('RZD_PBK_USER_PSWD_1')
-    PBK_USER_DECLARANT_ID: int = 1
 
     RB_USER_LOGIN_1: str = os.getenv('RZD_RB_USER_LOGIN_1')
     RB_USER_PSWD_1: str = os.getenv('RZD_RB_USER_PSWD_1')
@@ -142,6 +145,7 @@ class ROSSETI_MR_SETTINGS:
 
 
 db_settings = DB_SETTINGS()
+bot_email_settings = BOT_EMAIL_SETTINGS()
 portal_tp_settings = PORTAL_TP_SETTINGS()
 mosoblenergo_settings = MOSOBLENERGO_SETTINGS()
 sk_tatarstan_settings = SK_TATARSTAN_SETTINGS()

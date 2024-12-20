@@ -17,13 +17,14 @@ init(autoreset=True)
 LOG_DIR: str = os.path.join(CURRENT_DIR, '..', 'log')
 LOG_FILE_PATH: str = os.path.join(LOG_DIR, 'sql.log')
 os.makedirs(LOG_DIR, exist_ok=True)
-logging.basicConfig(
-    filename=LOG_FILE_PATH,
-    level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s',
-    datefmt='%Y-%m-%d %H:%M:%S',
-    encoding='utf-8'
-)
+
+logger = logging.getLogger('sql_logger')
+logger.setLevel(logging.DEBUG)
+file_handler = logging.FileHandler(LOG_FILE_PATH, encoding='utf-8')
+file_handler.setLevel(logging.DEBUG)
+formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+file_handler.setFormatter(formatter)
+logger.addHandler(file_handler)
 
 
 def sql_queries(request: str) -> Union[list, bool]:
@@ -78,7 +79,7 @@ def sql_queries(request: str) -> Union[list, bool]:
             request + '\n' +
             Style.RESET_ALL + str(e)
         )
-        logging.error(
+        logger.error(
             f'\nВ файле {__file__} произошла ошибка ' +
             f'при выполнении запроса к БД:\n{request}\n{str(e)}'
         )
