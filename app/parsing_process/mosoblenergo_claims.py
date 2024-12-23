@@ -20,6 +20,12 @@ PARSING_DELAY: int = 5
 PARSING_TIMER: int = 120
 PAGE_COUNT: int = 20
 MAX_PAGE_COUNT: int = 208
+USERS_EMAILS = ['y.martynova@newtowers.ru']
+for i in range(1, 100):
+    if i > 9:
+        USERS_EMAILS.append(f'portal{i}@mosoblenergo.ru')
+    else:
+        USERS_EMAILS.append(f'portal0{i}@mosoblenergo.ru')
 
 BUTTON_CONSULTANT_CLOSE: str = (
     "//span[@class='webim-action webim-ico webim-ico-cross']"
@@ -86,11 +92,7 @@ def mosoblenergo_claims(login: str, password: str):
         bot_email_settings.BOT_EMAIL_PSWD_1,
         bot_email_settings.EMAIL_SERVER,
         datetime.now(pytz.timezone('Europe/Moscow')),
-        [
-            'portal03@mosoblenergo.ru',
-            'portal04@mosoblenergo.ru',
-            'y.martynova@newtowers.ru',
-        ],
+        USERS_EMAILS,
         ['y.martynova@newtowers.ru']
     )
     if not confirmation_code:

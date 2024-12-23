@@ -120,9 +120,9 @@ def portal_tp_messages(login: str, password: str):
 
                     day, month_str, year = message_date_str.split()
                     month: str = MONTHS[month_str]
-                    message_date: date = datetime(
+                    message_date: date = date(
                         int(year), month, int(day)
-                    ).date()
+                    )
 
                     new_row = {
                         'parsing_data': parsing_data,

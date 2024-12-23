@@ -26,6 +26,12 @@ class BOT_EMAIL_SETTINGS:
     BOT_EMAIL_PSWD_1: str = os.getenv("BOT_EMAIL_PSWD_1")
 
 
+class BOT_TELEGRAM_SETTINGS:
+    """Telegram бот для уведомлений"""
+    TELEGRAM_TOKEN_1: str = os.getenv("TELEGRAM_TOKEN_1")
+    TELEGRAM_GROUP_ID_1: int = int(os.getenv("TELEGRAM_GROUP_ID_1"))
+
+
 class PORTAL_TP_SETTINGS:
     """Данные ЛК ПорталТП."""
     PERSONAL_AREA_ID: int = 1
@@ -145,7 +151,10 @@ class ROSSETI_MR_SETTINGS:
 
 
 db_settings = DB_SETTINGS()
+
 bot_email_settings = BOT_EMAIL_SETTINGS()
+bot_telegram_settings = BOT_TELEGRAM_SETTINGS()
+
 portal_tp_settings = PORTAL_TP_SETTINGS()
 mosoblenergo_settings = MOSOBLENERGO_SETTINGS()
 sk_tatarstan_settings = SK_TATARSTAN_SETTINGS()

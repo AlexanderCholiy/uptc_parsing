@@ -7,6 +7,7 @@ from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
+from selenium.common.exceptions import TimeoutException, NoSuchElementException
 
 CURRENT_DIR: str = os.path.dirname(__file__)
 sys.path.append(os.path.join(CURRENT_DIR, '..', '..'))
@@ -19,9 +20,14 @@ PARSING_TIMER: int = 120
 
 def rzd_claims(login: str, password: str):
     driver = webdriver.Chrome()
-    driver.get('https://lk.energopromsbyt.ru/personal/?reload')
+    driver.get('https://lk.energopromsbyt.ru/personal/')
     driver.maximize_window()
     wait = WebDriverWait(driver, PARSING_TIMER)
+
+    # Иногда загружается не стандартая версия сайта, поэтому после регестрации
+    # стоит сделать перезагрузку страницы:
+    driver.refresh()
+
     authorize_form(
         wait, login, password,
         "//*[@id='form-text-email']",
@@ -32,9 +38,6 @@ def rzd_claims(login: str, password: str):
     wait.until(
         EC.presence_of_element_located((By.XPATH, "//*[@href='/?logout=yes']"))
     )
-    # Иногда загружается не стандартая версия сайта, поэтому после регестрации
-    # стоит сделать перезагрузку страницы:
-    driver.refresh()
 
     list_claims_data = wait.until(
         EC.presence_of_all_elements_located(

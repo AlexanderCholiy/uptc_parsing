@@ -13,16 +13,18 @@ from selenium.webdriver.common.by import By
 
 CURRENT_DIR: str = os.path.dirname(__file__)
 sys.path.append(os.path.join(CURRENT_DIR, '..', '..'))
-from app.models.parsing_model import CLAIMS  # noqa: E402
+from app.models.parsing_model import MESSAGES  # noqa: E402
 from app.common.authorize_form import authorize_form  # noqa: E402
 
 PARSING_DELAY: int = 5
 PARSING_TIMER: int = 120
 
 
-def rosseti_mr_claims(login: str, password: str):
+def rosseti_mr_messages(login: str, password: str):
     driver = webdriver.Chrome()
-    driver.get('https://lk.rossetimr.ru/claims')
+    driver.get(
+        'https://lk.rossetimr.ru/cabinet/messages?message_tab=appeal_messages'
+    )
     driver.maximize_window()
     wait = WebDriverWait(driver, PARSING_TIMER)
 
@@ -68,46 +70,51 @@ def rosseti_mr_claims(login: str, password: str):
         rows = wait.until(
             EC.presence_of_all_elements_located((By.XPATH, "//tbody/tr"))
         )
-        min_claim_date = date.today()
+        min_message_date = date.today()
         for row in rows:
             try:
                 cells = row.find_elements(By.XPATH, ".//td")
                 parsing_data = datetime.now()
-                claim_number: str = cells[4].text.strip()
-                claim_status = cells[3].text.strip()
-                claim_link = (
+                message_number: str = cells[1].text.strip()
+                message_status = cells[3].text.strip()
+                message_link = (
                     f'https://lk.rossetimr.ru/{row.get_attribute("href")}'
                 )
-                claim_date: str = cells[1].text.strip()
-                claim_date: date = (
-                    datetime.strptime(claim_date, '%d.%m.%Y').date()
+                message_date: str = cells[0].text.strip()
+                message_date: date = (
+                    datetime.strptime(message_date, '%d.%m.%Y').date()
                 )
-                claim_address: str = cells[7].text.split('\n')[0].strip()
-                claim_inner_number: str = (
-                    claim_link.split('?page')[0].split('claims/')[1].strip()
+                message_address: str = cells[7].text.split('\n')[0].strip()
+                message_internal_number = (
+                    message_link.split('?page')[0].split('messages/')[1]
                 )
-                claim_number = claim_number if claim_number != '' else (
-                    f'внутренний номер {claim_inner_number}'
+                message_number = message_number if message_number != '' else (
+                    f'внутренний номер {message_internal_number}'
                 )
+                message_claim_number: str = cells[8].text.strip()
+                message_subject: str = cells[2].text.strip()
+                message_text: str = cells[6].text.strip()
 
                 new_row = {
                     'parsing_data': parsing_data,
-                    'claim_number': claim_number,
-                    'claim_status': claim_status,
-                    'claim_link': claim_link,
-                    'claim_date': claim_date,
-                    'claim_address': claim_address,
-                    'claim_inner_number': claim_inner_number
+                    'message_number': message_number,
+                    'message_status': message_status,
+                    'message_date': message_date,
+                    'message_link': message_link,
+                    'message_subject': message_subject,
+                    'message_text': message_text,
+                    'message_claim_number': message_claim_number,
+                    'message_address': message_address,
                 }
 
-                CLAIMS.loc[len(CLAIMS)] = new_row
+                MESSAGES.loc[len(MESSAGES)] = new_row
 
-                min_claim_date = min(claim_date, min_claim_date)
+                min_message_date = min(message_date, min_message_date)
 
             except StaleElementReferenceException:
                 continue
 
-        return min_claim_date
+        return min_message_date
 
     last_page: bool = False
     while not last_page:
@@ -128,4 +135,4 @@ def rosseti_mr_claims(login: str, password: str):
 
     driver.quit()
 
-    return CLAIMS
+    return MESSAGES

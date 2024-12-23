@@ -108,9 +108,7 @@ def sk_tatarstan_claims(login: str, password: str):
                     BASE_SELECTOR +
                     "//div[contains(@class, 'src-pages-claims-common-claims" +
                     "-list-tech-connection-item-tc-claim-item-" +
-                    "module__secondColumn--i6FbW')]" +
-                    "//span[contains(@class, 'src-lib-components-info-link-" +
-                    "info-link-module__link--yGhUO')]"
+                    "module__secondColumn--i6FbW')]"
                 )
             )
         )

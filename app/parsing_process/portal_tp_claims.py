@@ -108,9 +108,10 @@ def portal_tp_claims(login: str, password: str):
 
                     day, month_str, year = claim_date_str.split()
                     month: str = MONTHS[month_str]
-                    claim_date: datetime = datetime(
+                    claim_date: date = date(
                         int(year), month, int(day)
-                    ).date()
+                    )
+                    print(claim_date)
 
                     new_row = {
                         'parsing_data': parsing_data,

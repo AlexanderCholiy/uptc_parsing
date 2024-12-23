@@ -60,7 +60,7 @@ MESSAGES = DataFrame(
         'message_address',
     ]
 )
-CLAIMS_CONSTANTS_TYPES = {
+CLAIMS_CONSTANTS_TYPES: Dict[str, int] = {
     'claim_date': 1030,
     'claim_link': 1040,
     'claim_inner_number': 1080,
@@ -134,7 +134,6 @@ class PARSING:
         return df_unique
 
     def write_claims_data_to_db(self, claims_df: Optional[DataFrame]):
-        return
         if claims_df is None:
             return
         for index, row in claims_df.iterrows():
@@ -191,7 +190,6 @@ class PARSING:
         print()
 
     def write_messages_data_to_db(self, messages_df: Optional[DataFrame]):
-        return
         if messages_df is None:
             return
         for index, row in messages_df.iterrows():
