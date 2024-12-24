@@ -1,7 +1,7 @@
 import os
 import sys
 from typing import Optional, Callable, Dict
-from datetime import datetime
+from datetime import datetime, date, timedelta
 
 import pandas as pd
 from pandas import DataFrame
@@ -126,16 +126,28 @@ class PARSING:
             Style.RESET_ALL + Fore.WHITE + Style.BRIGHT +
             f'{len(df_unique)}' +
             Style.RESET_ALL + Fore.CYAN + Style.DIM +
-            ' заявок для ' +
+            ' записей для ' +
             Style.RESET_ALL + Fore.WHITE + Style.BRIGHT +
             f'{func_parsing.__name__} ({self.declarant_name}).'
         )
 
         return df_unique
 
-    def write_claims_data_to_db(self, claims_df: Optional[DataFrame]):
+    def write_claims_data_to_db(
+        self,
+        claims_df: Optional[DataFrame],
+        filter_by_last_days: Optional[int] = None
+    ):
         if claims_df is None:
             return
+
+        if filter_by_last_days is not None:
+            cutoff_date = date.today() - timedelta(days=filter_by_last_days)
+            claims_df = claims_df[
+                (claims_df['claim_date'].isna())
+                | (claims_df['claim_date'] >= cutoff_date)
+            ].reset_index(drop=True)
+
         for index, row in claims_df.iterrows():
             claim_number: str = row['claim_number']
             claim_status: str = row['claim_status']
@@ -189,9 +201,21 @@ class PARSING:
             )
         print()
 
-    def write_messages_data_to_db(self, messages_df: Optional[DataFrame]):
+    def write_messages_data_to_db(
+        self,
+        messages_df: Optional[DataFrame],
+        filter_by_last_days: Optional[int] = None
+    ):
         if messages_df is None:
             return
+
+        if filter_by_last_days is not None:
+            cutoff_date = date.today() - timedelta(days=filter_by_last_days)
+            messages_df = messages_df[
+                (messages_df['message_date'].isna())
+                | (messages_df['message_date'] >= cutoff_date)
+            ].reset_index(drop=True)
+
         for index, row in messages_df.iterrows():
             message_number: str = row['message_number']
             message_status: str = row['message_status']

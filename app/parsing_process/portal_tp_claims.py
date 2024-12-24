@@ -1,6 +1,6 @@
 import os
 import sys
-from datetime import datetime, date, timedelta
+from datetime import datetime, date
 
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
@@ -111,7 +111,6 @@ def portal_tp_claims(login: str, password: str):
                     claim_date: date = date(
                         int(year), month, int(day)
                     )
-                    print(claim_date)
 
                     new_row = {
                         'parsing_data': parsing_data,
@@ -130,11 +129,7 @@ def portal_tp_claims(login: str, password: str):
         scroll_down(driver)
 
         if len(CLAIMS) == 0 or (
-            len(CLAIMS) == count_claims_ids
-        ) or (
-            CLAIMS['claim_date'].min() < (
-                date.today() - timedelta(days=30)
-            )
+            len(claims_ids) == count_claims_ids
         ):
             break
 

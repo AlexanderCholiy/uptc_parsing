@@ -1,5 +1,6 @@
 import time
 from datetime import datetime
+from typing import Optional
 
 from colorama import init, Fore, Style
 
@@ -38,7 +39,9 @@ DAY_END: datetime = (
 TIME_DELAY: int = 120
 
 
-def run_parsing(save_df: bool = True):
+def run_parsing(
+    save_df: bool = True, filter_by_last_days: Optional[int] = None
+):
     # АО Оборонэнерго:
     oboronenergo_pbk_1 = PARSING(
         'oboronenergo_pbk_1',
@@ -49,10 +52,12 @@ def run_parsing(save_df: bool = True):
         declarant_name='PBK_1'
     )
     oboronenergo_pbk_1.write_claims_data_to_db(
-        oboronenergo_pbk_1.parsing(oboronenergo_claims, save_df)
+        oboronenergo_pbk_1.parsing(oboronenergo_claims, save_df),
+        filter_by_last_days
     )
     oboronenergo_pbk_1.write_messages_data_to_db(
-        oboronenergo_pbk_1.parsing(oboronenergo_messages, save_df)
+        oboronenergo_pbk_1.parsing(oboronenergo_messages, save_df),
+        filter_by_last_days
     )
 
     # ОАО РЖД:
@@ -65,7 +70,7 @@ def run_parsing(save_df: bool = True):
         declarant_name='RB_1'
     )
     rzd_rb_1.write_claims_data_to_db(
-        rzd_rb_1.parsing(rzd_claims, save_df)
+        rzd_rb_1.parsing(rzd_claims, save_df), filter_by_last_days
     )
 
     rzd_ooo_rb_1 = PARSING(
@@ -77,7 +82,7 @@ def run_parsing(save_df: bool = True):
         'OOO_RB_1'
     )
     rzd_ooo_rb_1.write_claims_data_to_db(
-        rzd_ooo_rb_1.parsing(rzd_claims, save_df)
+        rzd_ooo_rb_1.parsing(rzd_claims, save_df), filter_by_last_days
     )
 
     rzd_ooo_rbt_1 = PARSING(
@@ -89,7 +94,7 @@ def run_parsing(save_df: bool = True):
         'OOO_RBT_1'
     )
     rzd_ooo_rbt_1.write_claims_data_to_db(
-        rzd_ooo_rbt_1.parsing(rzd_claims, save_df)
+        rzd_ooo_rbt_1.parsing(rzd_claims, save_df), filter_by_last_days
     )
 
     rzd_ooo_rbt_2 = PARSING(
@@ -101,7 +106,7 @@ def run_parsing(save_df: bool = True):
         'OOO_RBT_2'
     )
     rzd_ooo_rbt_2.write_claims_data_to_db(
-        rzd_ooo_rbt_2.parsing(rzd_claims, save_df)
+        rzd_ooo_rbt_2.parsing(rzd_claims, save_df), filter_by_last_days
     )
 
     # Портал ТП:
@@ -114,10 +119,12 @@ def run_parsing(save_df: bool = True):
         'RB_1'
     )
     portal_tp_rb_1.write_claims_data_to_db(
-        portal_tp_rb_1.parsing(portal_tp_claims, save_df)
+        portal_tp_rb_1.parsing(portal_tp_claims, save_df),
+        filter_by_last_days
     )
     portal_tp_rb_1.write_messages_data_to_db(
-        portal_tp_rb_1.parsing(portal_tp_messages, save_df)
+        portal_tp_rb_1.parsing(portal_tp_messages, save_df),
+        filter_by_last_days
     )
 
     portal_tp_vrt_1 = PARSING(
@@ -129,10 +136,12 @@ def run_parsing(save_df: bool = True):
         'VRT_1'
     )
     portal_tp_vrt_1.write_claims_data_to_db(
-        portal_tp_vrt_1.parsing(portal_tp_claims, save_df)
+        portal_tp_vrt_1.parsing(portal_tp_claims, save_df),
+        filter_by_last_days
     )
     portal_tp_vrt_1.write_messages_data_to_db(
-        portal_tp_vrt_1.parsing(portal_tp_messages, save_df)
+        portal_tp_vrt_1.parsing(portal_tp_messages, save_df),
+        filter_by_last_days
     )
 
     portal_tp_vrt_1_1 = PARSING(
@@ -144,10 +153,12 @@ def run_parsing(save_df: bool = True):
         'VRT_1_1'
     )
     portal_tp_vrt_1_1.write_claims_data_to_db(
-        portal_tp_vrt_1_1.parsing(portal_tp_claims, save_df)
+        portal_tp_vrt_1_1.parsing(portal_tp_claims, save_df),
+        filter_by_last_days
     )
     portal_tp_vrt_1_1.write_messages_data_to_db(
-        portal_tp_vrt_1_1.parsing(portal_tp_messages, save_df)
+        portal_tp_vrt_1_1.parsing(portal_tp_messages, save_df),
+        filter_by_last_days
     )
 
     portal_tp_pbk_1 = PARSING(
@@ -159,10 +170,12 @@ def run_parsing(save_df: bool = True):
         'PBK_1'
     )
     portal_tp_pbk_1.write_claims_data_to_db(
-        portal_tp_pbk_1.parsing(portal_tp_claims, save_df)
+        portal_tp_pbk_1.parsing(portal_tp_claims, save_df),
+        filter_by_last_days
     )
     portal_tp_pbk_1.write_messages_data_to_db(
-        portal_tp_pbk_1.parsing(portal_tp_messages, save_df)
+        portal_tp_pbk_1.parsing(portal_tp_messages, save_df),
+        filter_by_last_days
     )
 
     portal_tp_pbk_sib_1 = PARSING(
@@ -174,13 +187,15 @@ def run_parsing(save_df: bool = True):
         'PBK_SIB_1'
     )
     portal_tp_pbk_sib_1.write_claims_data_to_db(
-        portal_tp_pbk_sib_1.parsing(portal_tp_claims, save_df)
+        portal_tp_pbk_sib_1.parsing(portal_tp_claims, save_df),
+        filter_by_last_days
     )
     portal_tp_pbk_sib_1.write_messages_data_to_db(
-        portal_tp_pbk_sib_1.parsing(portal_tp_messages, save_df)
+        portal_tp_pbk_sib_1.parsing(portal_tp_messages, save_df),
+        filter_by_last_days
     )
 
-    # Мособлэнерго (проверь РБ_1):
+    # Мособлэнерго:
     # Код подтверждения приходит только днём...
     if DAY_START <= datetime.now() <= DAY_END:
         mosoblenergo_vr_top_1 = PARSING(
@@ -192,7 +207,8 @@ def run_parsing(save_df: bool = True):
             'VR_TOP_1'
         )
         mosoblenergo_vr_top_1.write_claims_data_to_db(
-            mosoblenergo_vr_top_1.parsing(mosoblenergo_claims, save_df)
+            mosoblenergo_vr_top_1.parsing(mosoblenergo_claims, save_df),
+            filter_by_last_days
         )
         time.sleep(TIME_DELAY)
         mosoblenergo_new_towers_mr_1 = PARSING(
@@ -204,7 +220,8 @@ def run_parsing(save_df: bool = True):
             'NEW_TOWERS_MR_1'
         )
         mosoblenergo_new_towers_mr_1.write_claims_data_to_db(
-            mosoblenergo_new_towers_mr_1.parsing(mosoblenergo_claims, save_df)
+            mosoblenergo_new_towers_mr_1.parsing(mosoblenergo_claims, save_df),
+            filter_by_last_days
         )
         time.sleep(TIME_DELAY)
         mosoblenergo_pbk_1 = PARSING(
@@ -216,7 +233,8 @@ def run_parsing(save_df: bool = True):
             'PBK_1'
         )
         mosoblenergo_pbk_1.write_claims_data_to_db(
-            mosoblenergo_pbk_1.parsing(mosoblenergo_claims, save_df)
+            mosoblenergo_pbk_1.parsing(mosoblenergo_claims, save_df),
+            filter_by_last_days
         )
         time.sleep(TIME_DELAY)
         mosoblenergo_rb_1 = PARSING(
@@ -228,7 +246,8 @@ def run_parsing(save_df: bool = True):
             'RB_1'
         )
         mosoblenergo_rb_1.write_claims_data_to_db(
-            mosoblenergo_rb_1.parsing(mosoblenergo_claims, save_df)
+            mosoblenergo_rb_1.parsing(mosoblenergo_claims, save_df),
+            filter_by_last_days
         )
 
     # СК Татарстан:
@@ -241,13 +260,16 @@ def run_parsing(save_df: bool = True):
         'PBK_1'
     )
     sk_tatarstan_pbk_1.write_claims_data_to_db(
-        sk_tatarstan_pbk_1.parsing(sk_tatarstan_claims, save_df)
+        sk_tatarstan_pbk_1.parsing(sk_tatarstan_claims, save_df),
+        filter_by_last_days
     )
     sk_tatarstan_pbk_1.write_messages_data_to_db(
-        sk_tatarstan_pbk_1.parsing(sk_tatarstan_messages, save_df)
+        sk_tatarstan_pbk_1.parsing(sk_tatarstan_messages, save_df),
+        filter_by_last_days
     )
     sk_tatarstan_pbk_1.write_claims_data_to_db(
-        sk_tatarstan_pbk_1.parsing(sk_tatarstan_claims_archive, save_df)
+        sk_tatarstan_pbk_1.parsing(sk_tatarstan_claims_archive, save_df),
+        filter_by_last_days
     )
 
     # Россети МР:
@@ -260,10 +282,12 @@ def run_parsing(save_df: bool = True):
         'NEW_TOWERS_MR_1'
     )
     rosseti_mr_new_towers_mr_1.write_claims_data_to_db(
-        rosseti_mr_new_towers_mr_1.parsing(rosseti_mr_claims, save_df)
+        rosseti_mr_new_towers_mr_1.parsing(rosseti_mr_claims, save_df),
+        filter_by_last_days
     )
     rosseti_mr_new_towers_mr_1.write_messages_data_to_db(
-        rosseti_mr_new_towers_mr_1.parsing(rosseti_mr_messages, save_df)
+        rosseti_mr_new_towers_mr_1.parsing(rosseti_mr_messages, save_df),
+        filter_by_last_days
     )
 
     rosseti_mr_ooo_rb_1 = PARSING(
@@ -275,10 +299,12 @@ def run_parsing(save_df: bool = True):
         'OOO_RB_1'
     )
     rosseti_mr_ooo_rb_1.write_claims_data_to_db(
-        rosseti_mr_ooo_rb_1.parsing(rosseti_mr_claims, save_df)
+        rosseti_mr_ooo_rb_1.parsing(rosseti_mr_claims, save_df),
+        filter_by_last_days
     )
     rosseti_mr_ooo_rb_1.write_messages_data_to_db(
-        rosseti_mr_ooo_rb_1.parsing(rosseti_mr_messages, save_df)
+        rosseti_mr_ooo_rb_1.parsing(rosseti_mr_messages, save_df),
+        filter_by_last_days
     )
 
     rosseti_mr_rb_1 = PARSING(
@@ -290,10 +316,12 @@ def run_parsing(save_df: bool = True):
         'RB_1'
     )
     rosseti_mr_rb_1.write_claims_data_to_db(
-        rosseti_mr_rb_1.parsing(rosseti_mr_claims, save_df)
+        rosseti_mr_rb_1.parsing(rosseti_mr_claims, save_df),
+        filter_by_last_days
     )
     rosseti_mr_rb_1.write_messages_data_to_db(
-        rosseti_mr_rb_1.parsing(rosseti_mr_messages, save_df)
+        rosseti_mr_rb_1.parsing(rosseti_mr_messages, save_df),
+        filter_by_last_days
     )
 
     rosseti_mr_pbk_1 = PARSING(
@@ -305,10 +333,12 @@ def run_parsing(save_df: bool = True):
         'PBK_1'
     )
     rosseti_mr_pbk_1.write_claims_data_to_db(
-        rosseti_mr_pbk_1.parsing(rosseti_mr_claims, save_df)
+        rosseti_mr_pbk_1.parsing(rosseti_mr_claims, save_df),
+        filter_by_last_days
     )
     rosseti_mr_pbk_1.write_messages_data_to_db(
-        rosseti_mr_pbk_1.parsing(rosseti_mr_messages, save_df)
+        rosseti_mr_pbk_1.parsing(rosseti_mr_messages, save_df),
+        filter_by_last_days
     )
 
     rosseti_mr_ooo_capital_pole_1 = PARSING(
@@ -320,10 +350,12 @@ def run_parsing(save_df: bool = True):
         'OOO_CAPITAL_POLE_1'
     )
     rosseti_mr_ooo_capital_pole_1.write_claims_data_to_db(
-        rosseti_mr_ooo_capital_pole_1.parsing(rosseti_mr_claims, save_df)
+        rosseti_mr_ooo_capital_pole_1.parsing(rosseti_mr_claims, save_df),
+        filter_by_last_days
     )
     rosseti_mr_ooo_capital_pole_1.write_messages_data_to_db(
-        rosseti_mr_ooo_capital_pole_1.parsing(rosseti_mr_messages, save_df)
+        rosseti_mr_ooo_capital_pole_1.parsing(rosseti_mr_messages, save_df),
+        filter_by_last_days
     )
 
 
@@ -340,7 +372,7 @@ if __name__ == '__main__':
     print(Fore.MAGENTA + Style.BRIGHT + f'Запуск {__file__}')
     is_keyboard_interrupt: bool = False
     try:
-        run_parsing()
+        run_parsing(filter_by_last_days=30)
     except KeyboardInterrupt:
         log_completion(start_time)
         is_keyboard_interrupt = True

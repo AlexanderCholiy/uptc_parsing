@@ -9,6 +9,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+from selenium.common.exceptions import NoSuchElementException, TimeoutException
 
 CURRENT_DIR: str = os.path.dirname(__file__)
 sys.path.append(os.path.join(CURRENT_DIR, '..', '..'))
@@ -18,8 +19,6 @@ from app.common.take_code_from_email import take_code_from_email  # noqa: E402
 
 PARSING_DELAY: int = 5
 PARSING_TIMER: int = 120
-PAGE_COUNT: int = 20
-MAX_PAGE_COUNT: int = 208
 USERS_EMAILS = ['y.martynova@newtowers.ru']
 for i in range(1, 100):
     if i > 9:
@@ -109,12 +108,10 @@ def mosoblenergo_claims(login: str, password: str):
     )[2]
     element.click()
 
-    for i in range(PAGE_COUNT):
+    current_page: int = 1
+    while True:
         wait.until(
             EC.visibility_of_all_elements_located((By.XPATH, LIST_APP_COMPANY))
-        )
-        app_pages = wait.until(
-            EC.presence_of_all_elements_located((By.XPATH, LIST_PAGE_SWITCHER))
         )
         claims_number = wait.until(
             EC.presence_of_all_elements_located((By.XPATH, LIST_APP_NUM))
@@ -162,25 +159,19 @@ def mosoblenergo_claims(login: str, password: str):
 
             CLAIMS.loc[len(CLAIMS)] = new_row
 
-        # От 2 до 6 страницы:
-        if 0 <= i <= 4 and i <= (PAGE_COUNT - 2):
-            app_pages[i].click()
-
-        # От 7 до PAGE_COUNT - 3 страницы:
-        elif 5 <= i <= (PAGE_COUNT - 2) and i < MAX_PAGE_COUNT - 4:
-            app_pages[5].click()
-
-        # Страница MAX_PAGE_COUNT - 2:
-        elif PAGE_COUNT >= (MAX_PAGE_COUNT - 2) and i == MAX_PAGE_COUNT - 4:
-            app_pages[6].click()
-
-        # Страница MAX_PAGE_COUNT - 1:
-        elif PAGE_COUNT >= (MAX_PAGE_COUNT - 1) and i == MAX_PAGE_COUNT - 3:
-            app_pages[7].click()
-
-        # Страница MAX_PAGE_COUNT:
-        elif PAGE_COUNT == MAX_PAGE_COUNT and i == MAX_PAGE_COUNT - 2:
-            app_pages[8].click()
+        try:
+            element = WebDriverWait(driver, PARSING_DELAY).until(
+                EC.presence_of_element_located(
+                    (
+                        By.XPATH,
+                        "//li[contains(@class, 'pagination__item ng-scope')]" +
+                        f"//a[text()='{current_page}']"
+                    )
+                )
+            ).click()
+            current_page += 1
+        except (NoSuchElementException, TimeoutException):
+            break
 
     driver.quit()
 

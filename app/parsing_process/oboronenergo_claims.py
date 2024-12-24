@@ -89,7 +89,8 @@ def oboronenergo_claims(login: str, password: str):
             except StaleElementReferenceException:
                 continue
 
-    for _ in range(100):
+    not_last_page: bool = True
+    while not_last_page:
         try:
             take_data_from_page()
             element = WebDriverWait(driver, PARSING_DELAY).until(
@@ -99,7 +100,7 @@ def oboronenergo_claims(login: str, password: str):
             )
             element.click()
         except TimeoutException:
-            break
+            not_last_page: bool = False
 
     driver.quit()
 

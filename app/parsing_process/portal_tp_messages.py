@@ -1,6 +1,6 @@
 import os
 import sys
-from datetime import datetime, date, timedelta
+from datetime import datetime, date
 
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
@@ -142,11 +142,7 @@ def portal_tp_messages(login: str, password: str):
         scroll_down(driver)
 
         if len(MESSAGES) == 0 or (
-            len(MESSAGES) == count_messages_ids
-        ) or (
-            MESSAGES['message_date'].min() < (
-                date.today() - timedelta(days=30)
-            )
+            len(messages_ids) == count_messages_ids
         ):
             break
 

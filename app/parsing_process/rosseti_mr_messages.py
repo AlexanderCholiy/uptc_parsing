@@ -1,7 +1,7 @@
 import os
 import sys
 import time
-from datetime import datetime, date, timedelta
+from datetime import datetime, date
 
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
@@ -119,8 +119,9 @@ def rosseti_mr_messages(login: str, password: str):
     last_page: bool = False
     while not last_page:
         try:
-            if take_data_from_page() < date.today() - timedelta(days=365):
-                break
+            # if take_data_from_page() < date.today() - timedelta(days=365):
+            #     break
+            take_data_from_page()
             WebDriverWait(driver, PARSING_DELAY).until(
                 EC.presence_of_element_located(
                     (
