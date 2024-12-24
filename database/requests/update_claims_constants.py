@@ -4,7 +4,7 @@ from datetime import datetime
 def request_claims_constants_update(
     personal_area_id: int, declarant_id: int, claim_number: str,
     parsing_data: datetime, constant_type: int, constant_text: str
-):
+) -> str:
     """Обновление таблицы constants"""
     return (f"""
     DO $$

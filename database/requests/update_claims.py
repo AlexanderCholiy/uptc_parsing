@@ -1,6 +1,6 @@
 def request_update_claims(
     personal_area_id: int, declarant_id: int, claim_number: str
-):
+) -> str:
     """Добавление новых заявок в claims"""
     return (f"""
     INSERT INTO claims (

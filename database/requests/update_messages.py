@@ -1,6 +1,6 @@
 def request_update_messages(
     personal_area_id: int, declarant_id: int, message_number: str
-):
+) -> str:
     """Добавление новых обращений в messages"""
     return (f"""
     INSERT INTO messages (

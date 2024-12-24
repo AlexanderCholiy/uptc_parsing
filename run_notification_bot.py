@@ -24,15 +24,23 @@ async def main():
     await dp.start_polling(bot)
 
 
+def log_completion(start_time):
+    delta_time = round((datetime.now() - start_time).total_seconds())
+    print(
+        Fore.MAGENTA + Style.BRIGHT +
+        f'Завершение {__file__} (Δt: {delta_time}c).'
+    )
+
+
 if __name__ == '__main__':
     start_time = datetime.now()
     print(Fore.MAGENTA + Style.BRIGHT + f'Запуск {__file__}')
+    is_keyboard_interrupt: bool = False
     try:
         asyncio.run(main())
     except KeyboardInterrupt:
-        bot_delta_time = datetime.now() - start_time
-        bot_delta_time = round(bot_delta_time.total_seconds())
-        print(
-            Fore.MAGENTA + Style.BRIGHT +
-            f'Завершение {__file__} (Δt: {bot_delta_time} c).'
-        )
+        log_completion(start_time)
+        is_keyboard_interrupt = True
+    finally:
+        if not is_keyboard_interrupt:
+            log_completion(start_time)

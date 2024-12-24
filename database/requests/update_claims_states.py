@@ -4,7 +4,7 @@ from datetime import datetime
 def request_update_claims_states(
     personal_area_id: int, declarant_id: int, claim_number: str,
     claim_status: str, parsing_data: datetime
-):
+) -> str:
     """Добавление уникальных статусов в claims_states."""
     return (f"""
     INSERT INTO claims_states (

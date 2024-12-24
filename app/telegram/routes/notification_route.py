@@ -43,11 +43,15 @@ async def send_notification():
             }
         )
         del filtered_df['is_send']
-        filtered_df = filtered_df.head(100)  # Нельзя в tg отправить слишком
-        # длинное сообщение
-        filtered_df = filtered_df.to_markdown(index=False, tablefmt='plain')
-        text = f"*Результаты парсинга:*```\n{filtered_df}\n```\n"
-        await bot.send_message(bot_telegram_settings.TELEGRAM_GROUP_ID_1, text)
+        # Нельзя в tg отправить слишком длинное сообщение:
+        rows_per_part = 20
+        for i in range(0, len(filtered_df), rows_per_part):
+            part_df: pd.DataFrame = filtered_df.iloc[i:i + rows_per_part]
+            part_df = part_df.to_markdown(index=False, tablefmt='plain')
+            text = f"*Результаты парсинга:*```\n{part_df}\n```\n"
+            await bot.send_message(
+                bot_telegram_settings.TELEGRAM_GROUP_ID_1, text
+            )
 
 
 @notification_route.startup()

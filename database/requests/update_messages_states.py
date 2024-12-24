@@ -4,7 +4,7 @@ from datetime import datetime
 def request_update_messages_states(
     personal_area_id: int, declarant_id: int, message_number: str,
     message_status: str, parsing_data: datetime
-):
+) -> str:
     """Добавление уникальных статусов в messages_states."""
     return (f"""
     INSERT INTO messages_states (
