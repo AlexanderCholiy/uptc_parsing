@@ -177,6 +177,8 @@ class PARSING:
             for claim_key, constant_type in CLAIMS_CONSTANTS_TYPES.items():
                 claim_value = row.get(claim_key)
                 if claim_value and not pd.isna(claim_value):
+                    if isinstance(claim_value, str):
+                        claim_value = claim_value.replace("'", "`")
                     sql_queries(
                         request_claims_constants_update(
                             personal_area_id=self.personal_area_id,
@@ -245,6 +247,8 @@ class PARSING:
             for message_key, constant_type in MESSAGES_CONSTANTS_TYPES.items():
                 message_value = row.get(message_key)
                 if message_value and not pd.isna(message_value):
+                    if isinstance(message_value, str):
+                        message_value = message_value.replace("'", "`")
                     sql_queries(
                         request_messages_constants_update(
                             personal_area_id=self.personal_area_id,

@@ -42,141 +42,141 @@ TIME_DELAY: int = 120
 def run_parsing(
     save_df: bool = True, filter_by_last_days: Optional[int] = None
 ):
-    # АО Оборонэнерго:
-    oboronenergo_pbk_1 = PARSING(
-        'oboronenergo_pbk_1',
-        oboronenergo_settings.PERSONAL_AREA_ID,
-        oboronenergo_settings.PBK_USER_LOGIN_1,
-        oboronenergo_settings.PBK_USER_PSWD_1,
-        oboronenergo_settings.PBK_USER_DECLARANT_ID,
-        declarant_name='PBK_1'
-    )
-    oboronenergo_pbk_1.write_claims_data_to_db(
-        oboronenergo_pbk_1.parsing(oboronenergo_claims, save_df),
-        filter_by_last_days
-    )
-    oboronenergo_pbk_1.write_messages_data_to_db(
-        oboronenergo_pbk_1.parsing(oboronenergo_messages, save_df),
-        filter_by_last_days
-    )
+    # # АО Оборонэнерго:
+    # oboronenergo_pbk_1 = PARSING(
+    #     'oboronenergo_pbk_1',
+    #     oboronenergo_settings.PERSONAL_AREA_ID,
+    #     oboronenergo_settings.PBK_USER_LOGIN_1,
+    #     oboronenergo_settings.PBK_USER_PSWD_1,
+    #     oboronenergo_settings.PBK_USER_DECLARANT_ID,
+    #     declarant_name='PBK_1'
+    # )
+    # oboronenergo_pbk_1.write_claims_data_to_db(
+    #     oboronenergo_pbk_1.parsing(oboronenergo_claims, save_df),
+    #     filter_by_last_days
+    # )
+    # oboronenergo_pbk_1.write_messages_data_to_db(
+    #     oboronenergo_pbk_1.parsing(oboronenergo_messages, save_df),
+    #     filter_by_last_days
+    # )
 
-    # ОАО РЖД:
-    rzd_rb_1 = PARSING(
-        'rzd_rb_1',
-        rzd_settings.PERSONAL_AREA_ID,
-        rzd_settings.RB_USER_LOGIN_1,
-        rzd_settings.RB_USER_PSWD_1,
-        rzd_settings.RB_USER_DECLARANT_ID,
-        declarant_name='RB_1'
-    )
-    rzd_rb_1.write_claims_data_to_db(
-        rzd_rb_1.parsing(rzd_claims, save_df), filter_by_last_days
-    )
+    # # ОАО РЖД:
+    # rzd_rb_1 = PARSING(
+    #     'rzd_rb_1',
+    #     rzd_settings.PERSONAL_AREA_ID,
+    #     rzd_settings.RB_USER_LOGIN_1,
+    #     rzd_settings.RB_USER_PSWD_1,
+    #     rzd_settings.RB_USER_DECLARANT_ID,
+    #     declarant_name='RB_1'
+    # )
+    # rzd_rb_1.write_claims_data_to_db(
+    #     rzd_rb_1.parsing(rzd_claims, save_df), filter_by_last_days
+    # )
 
-    rzd_ooo_rb_1 = PARSING(
-        'rzd_ooo_rb_1',
-        rzd_settings.PERSONAL_AREA_ID,
-        rzd_settings.OOO_RB_USER_LOGIN_1,
-        rzd_settings.OOO_RB_USER_PSWD_1,
-        rzd_settings.OOO_RB_USER_DECLARANT_ID,
-        'OOO_RB_1'
-    )
-    rzd_ooo_rb_1.write_claims_data_to_db(
-        rzd_ooo_rb_1.parsing(rzd_claims, save_df), filter_by_last_days
-    )
+    # rzd_ooo_rb_1 = PARSING(
+    #     'rzd_ooo_rb_1',
+    #     rzd_settings.PERSONAL_AREA_ID,
+    #     rzd_settings.OOO_RB_USER_LOGIN_1,
+    #     rzd_settings.OOO_RB_USER_PSWD_1,
+    #     rzd_settings.OOO_RB_USER_DECLARANT_ID,
+    #     'OOO_RB_1'
+    # )
+    # rzd_ooo_rb_1.write_claims_data_to_db(
+    #     rzd_ooo_rb_1.parsing(rzd_claims, save_df), filter_by_last_days
+    # )
 
-    rzd_ooo_rbt_1 = PARSING(
-        'rzd_ooo_rbt_1',
-        rzd_settings.PERSONAL_AREA_ID,
-        rzd_settings.OOO_RBT_USER_LOGIN_1,
-        rzd_settings.OOO_RBT_USER_PSWD_1,
-        rzd_settings.OOO_RBT_USER_DECLARANT_ID,
-        'OOO_RBT_1'
-    )
-    rzd_ooo_rbt_1.write_claims_data_to_db(
-        rzd_ooo_rbt_1.parsing(rzd_claims, save_df), filter_by_last_days
-    )
+    # rzd_ooo_rbt_1 = PARSING(
+    #     'rzd_ooo_rbt_1',
+    #     rzd_settings.PERSONAL_AREA_ID,
+    #     rzd_settings.OOO_RBT_USER_LOGIN_1,
+    #     rzd_settings.OOO_RBT_USER_PSWD_1,
+    #     rzd_settings.OOO_RBT_USER_DECLARANT_ID,
+    #     'OOO_RBT_1'
+    # )
+    # rzd_ooo_rbt_1.write_claims_data_to_db(
+    #     rzd_ooo_rbt_1.parsing(rzd_claims, save_df), filter_by_last_days
+    # )
 
-    rzd_ooo_rbt_2 = PARSING(
-        'rzd_ooo_rbt_2',
-        rzd_settings.PERSONAL_AREA_ID,
-        rzd_settings.OOO_RBT_USER_LOGIN_2,
-        rzd_settings.OOO_RBT_USER_PSWD_2,
-        rzd_settings.OOO_RBT_USER_DECLARANT_ID,
-        'OOO_RBT_2'
-    )
-    rzd_ooo_rbt_2.write_claims_data_to_db(
-        rzd_ooo_rbt_2.parsing(rzd_claims, save_df), filter_by_last_days
-    )
+    # rzd_ooo_rbt_2 = PARSING(
+    #     'rzd_ooo_rbt_2',
+    #     rzd_settings.PERSONAL_AREA_ID,
+    #     rzd_settings.OOO_RBT_USER_LOGIN_2,
+    #     rzd_settings.OOO_RBT_USER_PSWD_2,
+    #     rzd_settings.OOO_RBT_USER_DECLARANT_ID,
+    #     'OOO_RBT_2'
+    # )
+    # rzd_ooo_rbt_2.write_claims_data_to_db(
+    #     rzd_ooo_rbt_2.parsing(rzd_claims, save_df), filter_by_last_days
+    # )
 
-    # Портал ТП:
-    portal_tp_rb_1 = PARSING(
-        'portal_tp_rb_1',
-        portal_tp_settings.PERSONAL_AREA_ID,
-        portal_tp_settings.RB_USER_LOGIN_1,
-        portal_tp_settings.RB_USER_PSWD_1,
-        portal_tp_settings.RB_USER_DECLARANT_ID,
-        'RB_1'
-    )
-    portal_tp_rb_1.write_claims_data_to_db(
-        portal_tp_rb_1.parsing(portal_tp_claims, save_df),
-        filter_by_last_days
-    )
-    portal_tp_rb_1.write_messages_data_to_db(
-        portal_tp_rb_1.parsing(portal_tp_messages, save_df),
-        filter_by_last_days
-    )
+    # # Портал ТП:
+    # portal_tp_rb_1 = PARSING(
+    #     'portal_tp_rb_1',
+    #     portal_tp_settings.PERSONAL_AREA_ID,
+    #     portal_tp_settings.RB_USER_LOGIN_1,
+    #     portal_tp_settings.RB_USER_PSWD_1,
+    #     portal_tp_settings.RB_USER_DECLARANT_ID,
+    #     'RB_1'
+    # )
+    # portal_tp_rb_1.write_claims_data_to_db(
+    #     portal_tp_rb_1.parsing(portal_tp_claims, save_df),
+    #     filter_by_last_days
+    # )
+    # portal_tp_rb_1.write_messages_data_to_db(
+    #     portal_tp_rb_1.parsing(portal_tp_messages, save_df),
+    #     filter_by_last_days
+    # )
 
-    portal_tp_vrt_1 = PARSING(
-        'portal_tp_vrt_1',
-        portal_tp_settings.PERSONAL_AREA_ID,
-        portal_tp_settings.VRT_USER_LOGIN_1,
-        portal_tp_settings.VRT_USER_PSWD_1,
-        portal_tp_settings.VRT_USER_DECLARANT_ID,
-        'VRT_1'
-    )
-    portal_tp_vrt_1.write_claims_data_to_db(
-        portal_tp_vrt_1.parsing(portal_tp_claims, save_df),
-        filter_by_last_days
-    )
-    portal_tp_vrt_1.write_messages_data_to_db(
-        portal_tp_vrt_1.parsing(portal_tp_messages, save_df),
-        filter_by_last_days
-    )
+    # portal_tp_vrt_1 = PARSING(
+    #     'portal_tp_vrt_1',
+    #     portal_tp_settings.PERSONAL_AREA_ID,
+    #     portal_tp_settings.VRT_USER_LOGIN_1,
+    #     portal_tp_settings.VRT_USER_PSWD_1,
+    #     portal_tp_settings.VRT_USER_DECLARANT_ID,
+    #     'VRT_1'
+    # )
+    # portal_tp_vrt_1.write_claims_data_to_db(
+    #     portal_tp_vrt_1.parsing(portal_tp_claims, save_df),
+    #     filter_by_last_days
+    # )
+    # portal_tp_vrt_1.write_messages_data_to_db(
+    #     portal_tp_vrt_1.parsing(portal_tp_messages, save_df),
+    #     filter_by_last_days
+    # )
 
-    portal_tp_vrt_1_1 = PARSING(
-        'portal_tp_vrt_1_1',
-        portal_tp_settings.PERSONAL_AREA_ID,
-        portal_tp_settings.VRT_1_USER_LOGIN_1,
-        portal_tp_settings.VRT_1_USER_PSWD_1,
-        portal_tp_settings.VRT_1_USER_DECLARANT_ID,
-        'VRT_1_1'
-    )
-    portal_tp_vrt_1_1.write_claims_data_to_db(
-        portal_tp_vrt_1_1.parsing(portal_tp_claims, save_df),
-        filter_by_last_days
-    )
-    portal_tp_vrt_1_1.write_messages_data_to_db(
-        portal_tp_vrt_1_1.parsing(portal_tp_messages, save_df),
-        filter_by_last_days
-    )
+    # portal_tp_vrt_1_1 = PARSING(
+    #     'portal_tp_vrt_1_1',
+    #     portal_tp_settings.PERSONAL_AREA_ID,
+    #     portal_tp_settings.VRT_1_USER_LOGIN_1,
+    #     portal_tp_settings.VRT_1_USER_PSWD_1,
+    #     portal_tp_settings.VRT_1_USER_DECLARANT_ID,
+    #     'VRT_1_1'
+    # )
+    # portal_tp_vrt_1_1.write_claims_data_to_db(
+    #     portal_tp_vrt_1_1.parsing(portal_tp_claims, save_df),
+    #     filter_by_last_days
+    # )
+    # portal_tp_vrt_1_1.write_messages_data_to_db(
+    #     portal_tp_vrt_1_1.parsing(portal_tp_messages, save_df),
+    #     filter_by_last_days
+    # )
 
-    portal_tp_pbk_1 = PARSING(
-        'portal_tp_pbk_1',
-        portal_tp_settings.PERSONAL_AREA_ID,
-        portal_tp_settings.PBK_USER_LOGIN_1,
-        portal_tp_settings.PBK_USER_PSWD_1,
-        portal_tp_settings.PBK_USER_DECLARANT_ID,
-        'PBK_1'
-    )
-    portal_tp_pbk_1.write_claims_data_to_db(
-        portal_tp_pbk_1.parsing(portal_tp_claims, save_df),
-        filter_by_last_days
-    )
-    portal_tp_pbk_1.write_messages_data_to_db(
-        portal_tp_pbk_1.parsing(portal_tp_messages, save_df),
-        filter_by_last_days
-    )
+    # portal_tp_pbk_1 = PARSING(
+    #     'portal_tp_pbk_1',
+    #     portal_tp_settings.PERSONAL_AREA_ID,
+    #     portal_tp_settings.PBK_USER_LOGIN_1,
+    #     portal_tp_settings.PBK_USER_PSWD_1,
+    #     portal_tp_settings.PBK_USER_DECLARANT_ID,
+    #     'PBK_1'
+    # )
+    # portal_tp_pbk_1.write_claims_data_to_db(
+    #     portal_tp_pbk_1.parsing(portal_tp_claims, save_df),
+    #     filter_by_last_days
+    # )
+    # portal_tp_pbk_1.write_messages_data_to_db(
+    #     portal_tp_pbk_1.parsing(portal_tp_messages, save_df),
+    #     filter_by_last_days
+    # )
 
     portal_tp_pbk_sib_1 = PARSING(
         'portal_tp_pbk_sib_1',
