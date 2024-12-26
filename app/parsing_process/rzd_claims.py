@@ -3,11 +3,11 @@ import sys
 import re
 from datetime import datetime, date
 
+from pandas import DataFrame
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
-from selenium.common.exceptions import TimeoutException, NoSuchElementException
 
 CURRENT_DIR: str = os.path.dirname(__file__)
 sys.path.append(os.path.join(CURRENT_DIR, '..', '..'))
@@ -18,7 +18,7 @@ PARSING_DELAY: int = 5
 PARSING_TIMER: int = 120
 
 
-def rzd_claims(login: str, password: str):
+def rzd_claims(login: str, password: str, *args) -> DataFrame:
     driver = webdriver.Chrome()
     driver.get('https://lk.energopromsbyt.ru/personal/')
     driver.maximize_window()

@@ -4,6 +4,7 @@ import time
 import pytz
 from datetime import datetime, date
 
+from pandas import DataFrame
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -68,7 +69,7 @@ LIST_APP_LINK: str = (
 )
 
 
-def mosoblenergo_claims(login: str, password: str):
+def mosoblenergo_claims(login: str, *args) -> DataFrame:
     driver = webdriver.Chrome()
     driver.get('https://moetp.ru/desktop/personal-applications/#login')
     driver.maximize_window()

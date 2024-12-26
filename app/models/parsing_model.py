@@ -58,6 +58,8 @@ MESSAGES = DataFrame(
         'message_text',
         'message_claim_number',
         'message_address',
+        'message_filial',
+        'message_grid',
     ]
 )
 CLAIMS_CONSTANTS_TYPES: Dict[str, int] = {
@@ -68,6 +70,8 @@ CLAIMS_CONSTANTS_TYPES: Dict[str, int] = {
     'claim_address': 1100,
 }
 MESSAGES_CONSTANTS_TYPES: Dict[str, int] = {
+    'message_grid': 1010,
+    'message_filial': 1020,
     'message_link': 1040,
     'message_address': 1100,
     'message_date': 2030,
@@ -98,18 +102,21 @@ class PARSING:
     def parsing(
         self, func_parsing: Callable, save_df: bool = True
     ) -> Optional[DataFrame]:
-        add_info = f'{self.declarant_name} ({self.login})'
+        add_info = f'{self.declarant_name} - {self.login}'
 
         @log_timer(func_parsing.__name__)
         @log_result(func_parsing.__name__, add_info)
         def wrapped_func():
-            return func_parsing(self.login, self.password)
+            return func_parsing(
+                self.login, self.password,
+                self.personal_area_id, self.declarant_id
+            )
         result_df: Optional[DataFrame] = wrapped_func()
         if result_df is None:
             return
 
         df_unique = result_df.drop_duplicates()
-        df_unique = result_df.reset_index(drop=True)
+        df_unique = df_unique.reset_index(drop=True)
 
         if save_df:
             write_df_to_excel(
@@ -136,7 +143,8 @@ class PARSING:
     def write_claims_data_to_db(
         self,
         claims_df: Optional[DataFrame],
-        filter_by_last_days: Optional[int] = None
+        filter_by_last_days: Optional[int] = None,
+        only_constants: bool = False
     ):
         if claims_df is None:
             return
@@ -154,24 +162,26 @@ class PARSING:
             parsing_data: datetime = row['parsing_data']
 
             # Обновляем таблицу claims:
-            sql_queries(
-                request_update_claims(
-                    personal_area_id=self.personal_area_id,
-                    declarant_id=self.declarant_id,
-                    claim_number=claim_number
+            if not only_constants:
+                sql_queries(
+                    request_update_claims(
+                        personal_area_id=self.personal_area_id,
+                        declarant_id=self.declarant_id,
+                        claim_number=claim_number
+                    )
                 )
-            )
 
             # Обновляем таблицу claims_states:
-            sql_queries(
-                request_update_claims_states(
-                    personal_area_id=self.personal_area_id,
-                    declarant_id=self.declarant_id,
-                    claim_number=claim_number,
-                    claim_status=claim_status,
-                    parsing_data=parsing_data
+            if not only_constants:
+                sql_queries(
+                    request_update_claims_states(
+                        personal_area_id=self.personal_area_id,
+                        declarant_id=self.declarant_id,
+                        claim_number=claim_number,
+                        claim_status=claim_status,
+                        parsing_data=parsing_data
+                    )
                 )
-            )
 
             # Обновляем таблицу constants:
             for claim_key, constant_type in CLAIMS_CONSTANTS_TYPES.items():
@@ -206,7 +216,8 @@ class PARSING:
     def write_messages_data_to_db(
         self,
         messages_df: Optional[DataFrame],
-        filter_by_last_days: Optional[int] = None
+        filter_by_last_days: Optional[int] = None,
+        only_constants: bool = False
     ):
         if messages_df is None:
             return
@@ -224,24 +235,26 @@ class PARSING:
             parsing_data: datetime = row['parsing_data']
 
             # Обновляем таблицу messages:
-            sql_queries(
-                request_update_messages(
-                    personal_area_id=self.personal_area_id,
-                    declarant_id=self.declarant_id,
-                    message_number=message_number
+            if not only_constants:
+                sql_queries(
+                    request_update_messages(
+                        personal_area_id=self.personal_area_id,
+                        declarant_id=self.declarant_id,
+                        message_number=message_number
+                    )
                 )
-            )
 
             # Обновляем таблицу messages_states:
-            sql_queries(
-                request_update_messages_states(
-                    personal_area_id=self.personal_area_id,
-                    declarant_id=self.declarant_id,
-                    message_number=message_number,
-                    message_status=message_status,
-                    parsing_data=parsing_data
+            if not only_constants:
+                sql_queries(
+                    request_update_messages_states(
+                        personal_area_id=self.personal_area_id,
+                        declarant_id=self.declarant_id,
+                        message_number=message_number,
+                        message_status=message_status,
+                        parsing_data=parsing_data
+                    )
                 )
-            )
 
             # Обновляем таблицу messages_constants:
             for message_key, constant_type in MESSAGES_CONSTANTS_TYPES.items():

@@ -44,12 +44,11 @@ def log_result(func_name: str, add_info: str = 'NaN') -> Callable:
                 result = func(*args, **kwargs)
             except Exception as e:
                 error_msg = str(e)
-                add_pr_info = f' ({add_info})' if add_info == 'NaN' else ''
                 print(
                     Fore.RED + Style.DIM +
                     'Произошла ошибка в ' + Style.RESET_ALL +
                     Fore.WHITE + Style.BRIGHT +
-                    f'{func_name}{add_pr_info}:\n' +
+                    f'{func_name} ({add_info}):\n' +
                     Style.RESET_ALL + error_msg
                 )
             finally:

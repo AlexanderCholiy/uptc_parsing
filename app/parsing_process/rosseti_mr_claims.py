@@ -3,6 +3,7 @@ import sys
 import time
 from datetime import datetime, date
 
+from pandas import DataFrame
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -20,7 +21,7 @@ PARSING_DELAY: int = 5
 PARSING_TIMER: int = 120
 
 
-def rosseti_mr_claims(login: str, password: str):
+def rosseti_mr_claims(login: str, password: str, *args) -> DataFrame:
     driver = webdriver.Chrome()
     driver.get('https://lk.rossetimr.ru/claims')
     driver.maximize_window()

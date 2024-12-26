@@ -3,6 +3,7 @@ import sys
 import time
 from datetime import datetime, date
 
+from pandas import DataFrame
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -39,7 +40,7 @@ BASE_SELECTOR: str = (
 )
 
 
-def sk_tatarstan_messages(login: str, password: str):
+def sk_tatarstan_messages(login: str, password: str, *args) -> DataFrame:
     driver = webdriver.Chrome()
     driver.get('https://pdo.gridcom-rt.ru/auth')
     driver.maximize_window()

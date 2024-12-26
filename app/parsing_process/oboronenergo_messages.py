@@ -2,6 +2,7 @@ import os
 import sys
 from datetime import datetime, date
 
+from pandas import DataFrame
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -19,7 +20,7 @@ PARSING_DELAY: int = 5
 PARSING_TIMER: int = 120
 
 
-def oboronenergo_messages(login: str, password: str):
+def oboronenergo_messages(login: str, password: str, *args) -> DataFrame:
     driver = webdriver.Chrome()
     driver.get('https://oboronenergo.su/my/service/cabinet/feedback/')
     driver.maximize_window()
