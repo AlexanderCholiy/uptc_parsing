@@ -16,7 +16,7 @@ logger = logging.getLogger('result_logger')
 logger.setLevel(logging.DEBUG)
 file_handler = logging.FileHandler(LOG_FILE_PATH, encoding='utf-8')
 file_handler.setLevel(logging.DEBUG)
-formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+formatter = logging.Formatter('%(asctime)s __ %(levelname)s __ %(message)s')
 file_handler.setFormatter(formatter)
 logger.addHandler(file_handler)
 
@@ -27,14 +27,17 @@ notification_file_handler = logging.FileHandler(
 )
 notification_file_handler.setLevel(logging.DEBUG)
 notification_formatter = logging.Formatter(
-    '%(asctime)s - %(levelname)s - %(message)s'
+    '%(asctime)s __ %(levelname)s __ %(message)s'
 )
 notification_file_handler.setFormatter(notification_formatter)
 notification_logger.addHandler(notification_file_handler)
 
 
 def log_result(func_name: str, add_info: str = 'NaN') -> Callable:
-    """Декоратор для логирования удачного или нет выполнения скрипта."""
+    """
+    Декоратор для логирования удачного или нет выполнения скрипта.
+    Не используйте " __ " в названиях аргументов!
+    """
     def decorator(func: Callable) -> Callable:
         def wrapper(*args, **kwargs):
             error_msg: Optional[str] = None
@@ -53,14 +56,14 @@ def log_result(func_name: str, add_info: str = 'NaN') -> Callable:
                 )
             finally:
                 if error_msg is None:
-                    logger.info(f'{func_name} - {add_info}')
+                    logger.info(f'{func_name} __ {add_info}')
                     notification_logger.info(
-                        f'{func_name} - {add_info} - not sent'
+                        f'{func_name} __ {add_info} __ not sent'
                     )
                 else:
-                    logger.error(f'{func_name} - {add_info}:\n' + error_msg)
+                    logger.error(f'{func_name} __ {add_info}:\n' + error_msg)
                     notification_logger.error(
-                        f'{func_name} - {add_info} - not sent'
+                        f'{func_name} __ {add_info} __ not sent'
                     )
 
             return result

@@ -16,7 +16,7 @@ logger = logging.getLogger('timer_logger')
 logger.setLevel(logging.DEBUG)
 file_handler = logging.FileHandler(LOG_FILE_PATH, encoding='utf-8')
 file_handler.setLevel(logging.DEBUG)
-formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+formatter = logging.Formatter('%(asctime)s __ %(levelname)s __ %(message)s')
 file_handler.setFormatter(formatter)
 logger.addHandler(file_handler)
 

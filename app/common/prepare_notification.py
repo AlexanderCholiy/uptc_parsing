@@ -9,7 +9,7 @@ NOTIFICATION_LOG_FILE_PATH: str = os.path.join(LOG_DIR, 'notification.log')
 
 
 def parse_log_line(line: str) -> dict:
-    line: list[str] = line.split(' - ')
+    line: list[str] = line.split(' __ ')
     timestamp: datetime = datetime.strptime(line[0], '%Y-%m-%d %H:%M:%S,%f')
     result: str = 'success' if line[1] != 'ERROR' else 'error'
     source: str = line[2].strip()

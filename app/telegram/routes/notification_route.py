@@ -33,7 +33,7 @@ async def send_notification():
 
         if len(filtered_df) == 0:
             continue
-
+        
         filtered_df = filtered_df.rename(
             columns={
                 'timestamp': 'Дата и время',
