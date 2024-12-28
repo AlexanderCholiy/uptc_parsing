@@ -9,7 +9,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
 from app.common.prepare_notification import prepare_notification  # noqa: E402
 
 
-DELAY: int = 3600
+DELAY: int = 900
 notification_route = Router()
 
 
@@ -33,7 +33,7 @@ async def send_notification():
 
         if len(filtered_df) == 0:
             continue
-        
+
         filtered_df = filtered_df.rename(
             columns={
                 'timestamp': 'Дата и время',

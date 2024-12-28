@@ -21,7 +21,16 @@ dp = Dispatcher()
 
 async def main():
     dp.include_routers(notification_route)
-    await dp.start_polling(bot)
+    while True:
+        try:
+            await dp.start_polling(bot)
+        except Exception as e:
+            print(
+                Fore.RED + Style.DIM +
+                'Произошла ошибка:\n' +
+                Style.RESET_ALL + str(e)
+            )
+            await asyncio.sleep(120)
 
 
 def log_completion(start_time):
