@@ -70,7 +70,7 @@ def sql_queries(request: str) -> Union[list, bool]:
     except Exception as e:
         print(
             Fore.RED + Style.DIM +
-            'В файле ' +
+            'В ' +
             Style.RESET_ALL + Fore.WHITE + Style.BRIGHT +
             os.path.basename(__file__) +
             Style.RESET_ALL + Fore.RED + Style.DIM +
@@ -80,7 +80,7 @@ def sql_queries(request: str) -> Union[list, bool]:
             Style.RESET_ALL + str(e)
         )
         logger.error(
-            f'\nВ файле {__file__} произошла ошибка ' +
+            f'\nВ {__file__} произошла ошибка ' +
             f'при выполнении запроса к БД:\n{request}\n{str(e)}'
         )
 

@@ -11,7 +11,7 @@ from selenium.webdriver.remote.webelement import WebElement
 
 CURRENT_DIR: str = os.path.dirname(__file__)
 sys.path.append(os.path.join(CURRENT_DIR, '..', '..'))
-from app.models.parsing_model import MESSAGES  # noqa: E402
+from app.models.parsing_model import MESSAGES_COLUMNS  # noqa: E402
 from app.common.authorize_form import authorize_form  # noqa: E402
 from app.common.scroll_down import scroll_down  # noqa: E402
 
@@ -36,6 +36,7 @@ BASE_SELECTOR: str = "//li[@class='ui-datascroller-item']"
 
 
 def portal_tp_messages(login: str, password: str, *args) -> DataFrame:
+    MESSAGES = DataFrame(columns=MESSAGES_COLUMNS)
     driver = webdriver.Chrome()
     driver.get(
         'https://xn----7sb7akeedqd.xn--p1ai/platform/portal/' +

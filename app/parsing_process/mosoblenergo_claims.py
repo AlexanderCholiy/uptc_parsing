@@ -14,9 +14,10 @@ from selenium.common.exceptions import NoSuchElementException, TimeoutException
 
 CURRENT_DIR: str = os.path.dirname(__file__)
 sys.path.append(os.path.join(CURRENT_DIR, '..', '..'))
-from app.models.parsing_model import CLAIMS  # noqa: E402
+from app.models.parsing_model import CLAIMS_COLUMNS  # noqa: E402
 from settings.config import bot_email_settings  # noqa: E402
 from app.common.take_code_from_email import take_code_from_email  # noqa: E402
+
 
 PARSING_DELAY: int = 5
 PARSING_TIMER: int = 120
@@ -70,6 +71,7 @@ LIST_APP_LINK: str = (
 
 
 def mosoblenergo_claims(login: str, *args) -> DataFrame:
+    CLAIMS = DataFrame(columns=CLAIMS_COLUMNS)
     driver = webdriver.Chrome()
     driver.get('https://moetp.ru/desktop/personal-applications/#login')
     driver.maximize_window()

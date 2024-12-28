@@ -142,7 +142,7 @@ def run_parsing(
     )
     portal_tp_rb_1.write_messages_data_to_db(
         portal_tp_rb_1.parsing(portal_tp_messages_details, save_df),
-        None, True
+        filter_by_last_days, True
     )
 
     portal_tp_vrt_1 = PARSING(
@@ -229,8 +229,7 @@ def run_parsing(
         None, True
     )
 
-    # Мособлэнерго:
-    # Код подтверждения приходит только днём...
+    # Мособлэнерго (ночью код подтверждения приходит не всегда):
     if DAY_START <= datetime.now() <= DAY_END:
         mosoblenergo_vr_top_1 = PARSING(
             'mosoblenergo_vr_top_1',
@@ -406,7 +405,7 @@ if __name__ == '__main__':
     print(Fore.MAGENTA + Style.BRIGHT + f'Запуск {__file__}')
     is_keyboard_interrupt: bool = False
     try:
-        run_parsing(filter_by_last_days=30)
+        run_parsing(filter_by_last_days=90)
     except KeyboardInterrupt:
         log_completion(start_time)
         is_keyboard_interrupt = True

@@ -1,7 +1,7 @@
 import os
 import sys
-from typing import Optional, Callable, Dict
-from datetime import datetime, date, timedelta
+from typing import Optional, Callable, Dict, List
+from datetime import date, timedelta
 
 import pandas as pd
 from pandas import DataFrame
@@ -13,55 +13,55 @@ from app.common.log_result import log_result  # noqa: E402
 from app.common.log_timer import log_timer  # noqa: E402
 from app.common.write_df_to_excel import write_df_to_excel  # noqa: E402
 from database.db_conn import sql_queries  # noqa: E402
-from database.requests.update_claims import request_update_claims  # noqa: E402
+from database.requests.update_claims_numbers import (  # noqa: E402
+    request_update_claims_numbers
+)
 from database.requests.update_claims_states import (  # noqa: E402
     request_update_claims_states
 )
 from database.requests.update_claims_constants import (  # noqa: E402
-    request_claims_constants_update
+    request_update_claims_constants
 )
-from database.requests.update_messages import (  # noqa: E402
-    request_update_messages
+from database.requests.update_messages_numbers import (  # noqa: E402
+    request_update_messages_numbers
 )
 from database.requests.update_messages_states import (  # noqa: E402
     request_update_messages_states
 )
 from database.requests.update_messages_constants import (  # noqa: E402
-    request_messages_constants_update
+    request_update_messages_constants
 )
 
 
 init(autoreset=True)
 PARSING_DATA_DIR: str = os.path.join(CURRENT_DIR, '..', '..', 'data')
 os.makedirs(PARSING_DATA_DIR, exist_ok=True)
-CLAIMS = DataFrame(
-    columns=[
-        'parsing_data',
-        'claim_number',
-        'claim_status',
-        'claim_link',
-        'claim_date',
-        'claim_status_date',
-        'claim_inner_number',
-        'claim_response',
-        'claim_address',
-    ]
-)
-MESSAGES = DataFrame(
-    columns=[
-        'parsing_data',
-        'message_number',
-        'message_status',
-        'message_date',
-        'message_link',
-        'message_subject',
-        'message_text',
-        'message_claim_number',
-        'message_address',
-        'message_filial',
-        'message_grid',
-    ]
-)
+CLAIMS_COLUMNS: List[str] = [
+    'parsing_data',
+    'claim_number',
+    'claim_status',
+    'claim_link',
+    'claim_date',
+    'claim_status_date',
+    'claim_inner_number',
+    'claim_response',
+    'claim_address',
+]
+
+MESSAGES_COLUMNS: List[str] = [
+    'parsing_data',
+    'message_number',
+    'message_status',
+    'message_date',
+    'message_link',
+    'message_subject',
+    'message_text',
+    'message_claim_number',
+    'message_address',
+    'message_filial',
+    'message_grid',
+]
+
 CLAIMS_CONSTANTS_TYPES: Dict[str, int] = {
     'claim_date': 1030,
     'claim_link': 1040,
@@ -102,6 +102,10 @@ class PARSING:
     def parsing(
         self, func_parsing: Callable, save_df: bool = True
     ) -> Optional[DataFrame]:
+        """
+        Каждый DataFrame, который возвращает func_parsing должен быть определен
+        локально!
+        """
         add_info = f'{self.declarant_name} - {self.login}'
 
         @log_timer(func_parsing.__name__)
@@ -115,8 +119,7 @@ class PARSING:
         if result_df is None:
             return
 
-        df_unique = result_df.drop_duplicates()
-        df_unique = df_unique.reset_index(drop=True)
+        df_unique = result_df.drop_duplicates().reset_index(drop=True)
 
         if save_df:
             write_df_to_excel(
@@ -140,78 +143,97 @@ class PARSING:
 
         return df_unique
 
+    def _write_data_to_db(
+        self,
+        data_type: str,
+        df: Optional[DataFrame],
+        constants_types: dict,
+        date_column_name: str,
+        filter_by_last_days: Optional[int],
+        only_constants: bool,
+        request_update_fn: Callable,
+        request_update_states_fn: Callable,
+        request_update_constants_fn: Callable,
+    ):
+        if df is None:
+            return
+
+        if filter_by_last_days is not None and not (
+            df[date_column_name].isna().all()
+        ):
+            cutoff_date = date.today() - timedelta(days=filter_by_last_days)
+            df = (
+                df[
+                    (df[date_column_name].isna())
+                    | (df[date_column_name] >= cutoff_date)
+                ].reset_index(drop=True)
+            )
+
+        for index, row in df.iterrows():
+            number = row[f'{data_type}_number']
+            status = row[f'{data_type}_status']
+            parsing_data = row['parsing_data']
+
+            if not only_constants:
+                if not sql_queries(
+                    request_update_fn(
+                        self.personal_area_id, self.declarant_id, number
+                    )
+                ):
+                    continue
+
+            if not only_constants and not pd.isna(status):
+                sql_queries(
+                    request_update_states_fn(
+                        self.personal_area_id, self.declarant_id,
+                        number, status, parsing_data
+                    )
+                )
+
+            for key, constant_type in constants_types.items():
+                constant_value = row.get(key)
+                if constant_value and not pd.isna(constant_value):
+                    constant_value = constant_value.replace(
+                        "'", "`"
+                    ) if isinstance(constant_value, str) else constant_value
+
+                    sql_queries(
+                        request_update_constants_fn(
+                            self.personal_area_id, self.declarant_id,
+                            number, parsing_data, constant_type, constant_value
+                        )
+                    )
+
+            print(
+                Fore.CYAN + Style.DIM +
+                f'Загрузка {data_type}s для ' +
+                Style.RESET_ALL + Fore.WHITE + Style.BRIGHT +
+                self.instance_name +
+                Style.RESET_ALL + Fore.CYAN + Style.DIM +
+                ' — ' +
+                Style.RESET_ALL + Fore.WHITE + Style.BRIGHT +
+                f'{(round(100*(index + 1)/len(df), 2))}%',
+                end='\r'
+            )
+        print()
+
     def write_claims_data_to_db(
         self,
         claims_df: Optional[DataFrame],
         filter_by_last_days: Optional[int] = None,
         only_constants: bool = False
     ):
-        if claims_df is None:
-            return
-
-        if filter_by_last_days is not None:
-            cutoff_date = date.today() - timedelta(days=filter_by_last_days)
-            claims_df = claims_df[
-                (claims_df['claim_date'].isna())
-                | (claims_df['claim_date'] >= cutoff_date)
-            ].reset_index(drop=True)
-
-        for index, row in claims_df.iterrows():
-            claim_number: str = row['claim_number']
-            claim_status: str = row['claim_status']
-            parsing_data: datetime = row['parsing_data']
-
-            # Обновляем таблицу claims:
-            if not only_constants:
-                sql_queries(
-                    request_update_claims(
-                        personal_area_id=self.personal_area_id,
-                        declarant_id=self.declarant_id,
-                        claim_number=claim_number
-                    )
-                )
-
-            # Обновляем таблицу claims_states:
-            if not only_constants:
-                sql_queries(
-                    request_update_claims_states(
-                        personal_area_id=self.personal_area_id,
-                        declarant_id=self.declarant_id,
-                        claim_number=claim_number,
-                        claim_status=claim_status,
-                        parsing_data=parsing_data
-                    )
-                )
-
-            # Обновляем таблицу constants:
-            for claim_key, constant_type in CLAIMS_CONSTANTS_TYPES.items():
-                claim_value = row.get(claim_key)
-                if claim_value and not pd.isna(claim_value):
-                    if isinstance(claim_value, str):
-                        claim_value = claim_value.replace("'", "`")
-                    sql_queries(
-                        request_claims_constants_update(
-                            personal_area_id=self.personal_area_id,
-                            declarant_id=self.declarant_id,
-                            claim_number=claim_number,
-                            parsing_data=parsing_data,
-                            constant_type=constant_type,
-                            constant_text=claim_value
-                        )
-                    )
-
-            print(
-                Fore.CYAN + Style.DIM +
-                'Загрузка заявок для ' +
-                Style.RESET_ALL + Fore.WHITE + Style.BRIGHT +
-                self.instance_name +
-                Style.RESET_ALL + Fore.CYAN + Style.DIM +
-                ' — ' +
-                Style.RESET_ALL + Fore.WHITE + Style.BRIGHT +
-                f'{(round(100*(index + 1)/len(claims_df), 2))}%',
-                end='\r'
-            )
-        print()
+        self._write_data_to_db(
+            data_type='claim',
+            df=claims_df,
+            constants_types=CLAIMS_CONSTANTS_TYPES,
+            date_column_name='claim_date',
+            filter_by_last_days=filter_by_last_days,
+            only_constants=only_constants,
+            request_update_fn=request_update_claims_numbers,
+            request_update_states_fn=request_update_claims_states,
+            request_update_constants_fn=request_update_claims_constants
+        )
 
     def write_messages_data_to_db(
         self,
@@ -219,69 +241,14 @@ class PARSING:
         filter_by_last_days: Optional[int] = None,
         only_constants: bool = False
     ):
-        if messages_df is None:
-            return
-
-        if filter_by_last_days is not None:
-            cutoff_date = date.today() - timedelta(days=filter_by_last_days)
-            messages_df = messages_df[
-                (messages_df['message_date'].isna())
-                | (messages_df['message_date'] >= cutoff_date)
-            ].reset_index(drop=True)
-
-        for index, row in messages_df.iterrows():
-            message_number: str = row['message_number']
-            message_status: str = row['message_status']
-            parsing_data: datetime = row['parsing_data']
-
-            # Обновляем таблицу messages:
-            if not only_constants:
-                sql_queries(
-                    request_update_messages(
-                        personal_area_id=self.personal_area_id,
-                        declarant_id=self.declarant_id,
-                        message_number=message_number
-                    )
-                )
-
-            # Обновляем таблицу messages_states:
-            if not only_constants:
-                sql_queries(
-                    request_update_messages_states(
-                        personal_area_id=self.personal_area_id,
-                        declarant_id=self.declarant_id,
-                        message_number=message_number,
-                        message_status=message_status,
-                        parsing_data=parsing_data
-                    )
-                )
-
-            # Обновляем таблицу messages_constants:
-            for message_key, constant_type in MESSAGES_CONSTANTS_TYPES.items():
-                message_value = row.get(message_key)
-                if message_value and not pd.isna(message_value):
-                    if isinstance(message_value, str):
-                        message_value = message_value.replace("'", "`")
-                    sql_queries(
-                        request_messages_constants_update(
-                            personal_area_id=self.personal_area_id,
-                            declarant_id=self.declarant_id,
-                            message_number=message_number,
-                            parsing_data=parsing_data,
-                            constant_type=constant_type,
-                            constant_text=message_value
-                        )
-                    )
-
-            print(
-                Fore.CYAN + Style.DIM +
-                'Загрузка обращений для ' +
-                Style.RESET_ALL + Fore.WHITE + Style.BRIGHT +
-                self.instance_name +
-                Style.RESET_ALL + Fore.CYAN + Style.DIM +
-                ' — ' +
-                Style.RESET_ALL + Fore.WHITE + Style.BRIGHT +
-                f'{(round(100*(index + 1)/len(messages_df), 2))}%',
-                end='\r'
-            )
-        print()
+        self._write_data_to_db(
+            data_type='message',
+            df=messages_df,
+            constants_types=MESSAGES_CONSTANTS_TYPES,
+            date_column_name='message_date',
+            filter_by_last_days=filter_by_last_days,
+            only_constants=only_constants,
+            request_update_fn=request_update_messages_numbers,
+            request_update_states_fn=request_update_messages_states,
+            request_update_constants_fn=request_update_messages_constants
+        )
