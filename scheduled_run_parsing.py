@@ -20,7 +20,6 @@ def schedule_script(script_name, times):
 
 def main():
     schedule_script('run_parsing.py', ['00:00', '08:00', '16:00'])
-    schedule_script('run_dump_db.py', ['21:00'])
 
     while True:
         schedule.run_pending()
