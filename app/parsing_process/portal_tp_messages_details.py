@@ -17,7 +17,7 @@ from database.db_conn import sql_queries  # noqa: E402
 from database.requests.select_messages_details_urls import (  # noqa: E402
     select_messages_details_urls
 )
-from app.models.parsing_model import MESSAGES  # noqa: E402
+from app.models.parsing_model import MESSAGES_COLUMNS  # noqa: E402
 from app.common.authorize_form import authorize_form  # noqa: E402
 
 
@@ -30,6 +30,7 @@ def portal_tp_messages_details(
     login: str, password: str,
     personal_area_id: int, declarant_id: int, *args
 ) -> DataFrame:
+    MESSAGES = DataFrame(columns=MESSAGES_COLUMNS)
     messages_numbers_urls: List[Tuple[str, str]] = sql_queries(
         select_messages_details_urls(personal_area_id, declarant_id)
     )
@@ -77,7 +78,7 @@ def portal_tp_messages_details(
                 Fore.RED + Style.DIM +
                 'Проверьте ссылку в ' +
                 Style.RESET_ALL + Fore.WHITE + Style.BRIGHT +
-                str(portal_tp_messages_details.__name__) +
+                str(portal_tp_messages_details.__name__) + f' ({login})' +
                 Style.RESET_ALL + Fore.RED + Style.DIM +
                 ' — ' +
                 Style.RESET_ALL + Fore.WHITE + Style.BRIGHT +

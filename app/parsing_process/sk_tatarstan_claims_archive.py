@@ -13,7 +13,7 @@ from selenium.webdriver.remote.webelement import WebElement
 
 CURRENT_DIR: str = os.path.dirname(__file__)
 sys.path.append(os.path.join(CURRENT_DIR, '..', '..'))
-from app.models.parsing_model import CLAIMS  # noqa: E402
+from app.models.parsing_model import CLAIMS_COLUMNS  # noqa: E402
 from app.common.authorize_form import authorize_form  # noqa: E402
 
 
@@ -43,6 +43,7 @@ BASE_SELECTOR: str = (
 
 
 def sk_tatarstan_claims_archive(login: str, password: str, *args) -> DataFrame:
+    CLAIMS = DataFrame(columns=CLAIMS_COLUMNS)
     driver = webdriver.Chrome()
     driver.get('https://pdo.gridcom-rt.ru/auth')
     driver.maximize_window()

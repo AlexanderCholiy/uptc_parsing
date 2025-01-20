@@ -14,14 +14,16 @@ from selenium.webdriver.common.by import By
 
 CURRENT_DIR: str = os.path.dirname(__file__)
 sys.path.append(os.path.join(CURRENT_DIR, '..', '..'))
-from app.models.parsing_model import MESSAGES  # noqa: E402
+from app.models.parsing_model import MESSAGES_COLUMNS  # noqa: E402
 from app.common.authorize_form import authorize_form  # noqa: E402
+
 
 PARSING_DELAY: int = 5
 PARSING_TIMER: int = 120
 
 
 def rosseti_mr_messages(login: str, password: str, *args) -> DataFrame:
+    MESSAGES = DataFrame(columns=MESSAGES_COLUMNS)
     driver = webdriver.Chrome()
     driver.get(
         'https://lk.rossetimr.ru/cabinet/messages?message_tab=appeal_messages'

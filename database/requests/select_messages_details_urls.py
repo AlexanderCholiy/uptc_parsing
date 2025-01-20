@@ -2,11 +2,11 @@ def select_messages_details_urls(
     personal_area_id: int, declarant_id: int
 ) -> str:
     return (f'''
-    SELECT
+    SELECT DISTINCT
         ms.message_number,
         mc.constant_text
     FROM
-        messages as ms LEFT JOIN messages_constants as mc
+        messages as ms INNER JOIN messages_constants as mc
         ON ms.id = mc.message_id
     WHERE
         mc.constant_type = 1040
