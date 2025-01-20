@@ -11,7 +11,7 @@ from selenium.webdriver.remote.webelement import WebElement
 
 CURRENT_DIR: str = os.path.dirname(__file__)
 sys.path.append(os.path.join(CURRENT_DIR, '..', '..'))
-from app.models.parsing_model import MESSAGES  # noqa: E402
+from app.models.parsing_model import CLAIMS  # noqa: E402
 from app.common.authorize_form import authorize_form  # noqa: E402
 from app.common.scroll_down import scroll_down  # noqa: E402
 
@@ -35,7 +35,7 @@ MONTHS: dict = {
 BASE_SELECTOR: str = "//li[@class='ui-datascroller-item']"
 
 
-def portal_tp_messages(login: str, password: str, *args) -> DataFrame:
+def portal_tp_claims_archive(login: str, password: str, *args) -> DataFrame:
     driver = webdriver.Chrome()
     driver.get(
         'https://xn----7sb7akeedqd.xn--p1ai/platform/portal/' +
@@ -52,13 +52,25 @@ def portal_tp_messages(login: str, password: str, *args) -> DataFrame:
 
     wait.until(
         EC.element_to_be_clickable(
-            (By.XPATH, "//li[@role='tab' and @data-index='2']")
+            (By.XPATH, "//li[@role='tab' and @data-index='1']")
         )
     ).click()
 
-    messages_ids = set()
+    wait.until(
+        EC.element_to_be_clickable(
+            (
+                By.XPATH,
+                "//li[@class='ui-tabs-header ui-state-default ui-corner-top'" +
+                " and @role='tab' and @aria-expanded='false'" +
+                " and @aria-selected='false' and @data-index='1'" +
+                " and contains(., 'Архив')]/a"
+            )
+        )
+    ).click()
 
-    def messages_elements(
+    claims_ids = set()
+
+    def claims_elements(
         xpath_selector, display_filter: bool = True
     ) -> list[WebElement]:
         elements: list[WebElement] = wait.until(
@@ -73,80 +85,67 @@ def portal_tp_messages(login: str, password: str, *args) -> DataFrame:
     scroll_down(driver)
 
     while True:
-        count_messages_ids = len(messages_ids)
-        messages_links = messages_elements(
+        count_claims_ids = len(claims_ids)
+        claims_links = claims_elements(
             BASE_SELECTOR +
             "//div[@class='listEvent__item-right-section']" +
             "//a[@class='ui-link ui-widget " +
             "listEvent__item-message__details']"
         )
-        messages_statuses = messages_elements(
+        claims_statuses = claims_elements(
             BASE_SELECTOR +
             "//div[contains(@class, 'listEvent__item-status')]"
         )
-        messages_subjects = messages_elements(
-            BASE_SELECTOR +
-            "//div[contains(@class, 'listEvent__item-nameEntity')]"
-        )
-        messages_numbers = messages_elements(
+        claims_numbers = claims_elements(
             BASE_SELECTOR +
             "//div[contains(@class, 'listEvent__item-number')]"
         )
-        messages_dates = messages_elements(
+        claims_dates = claims_elements(
             BASE_SELECTOR +
             "//div[contains(@class, 'listEvent__item-date')]"
         )
 
-        for message_index in range(len(messages_links)):
+        for claim_index in range(len(claims_links)):
             try:
-                message_link = messages_links[message_index].get_attribute(
-                    'href'
-                )
+                claim_link = claims_links[claim_index].get_attribute('href')
 
-                if message_link not in messages_ids:
-                    messages_ids.add(message_link)
+                if claim_link not in claims_ids:
+                    claims_ids.add(claim_link)
                     parsing_data: datetime = datetime.now()
-                    message_number: str = (
-                        messages_numbers[message_index].text.replace('№', '').
+                    claim_number: str = (
+                        claims_numbers[claim_index].text.replace('№', '').
                         strip()
                     )
-                    message_number = message_number.replace('№', '').strip()
-                    message_status: str = (
-                        messages_statuses[message_index].text
-                    )
-                    message_subject: str = (
-                        messages_subjects[message_index].text
-                    )
-                    message_date_str: str = messages_dates[message_index].text
+                    claim_status: str = claims_statuses[claim_index].text
+                    claim_date_str: str = claims_dates[claim_index].text
 
-                    day, month_str, year = message_date_str.split()
+                    day, month_str, year = claim_date_str.split()
                     month: str = MONTHS[month_str]
-                    message_date: date = date(
+                    claim_date: date = date(
                         int(year), month, int(day)
                     )
 
                     new_row = {
                         'parsing_data': parsing_data,
-                        'message_number': message_number,
-                        'message_status': message_status,
-                        'message_subject': message_subject,
-                        'message_link': message_link,
-                        'message_date': message_date,
+                        'claim_number': claim_number,
+                        'claim_status': claim_status,
+                        'claim_date': claim_date,
+                        'claim_link': claim_link,
                     }
 
             except IndexError:
                 break
 
             else:
-                MESSAGES.loc[len(MESSAGES)] = new_row
+                CLAIMS.loc[len(CLAIMS)] = new_row
 
         check_end_page: bool = scroll_down(driver)
 
         if (
-            len(MESSAGES) == 0 or len(messages_ids) == count_messages_ids
+            len(CLAIMS) == 0 or len(claims_ids) == count_claims_ids
         ) and not check_end_page:
             break
 
     driver.quit()
 
-    return MESSAGES
+    return CLAIMS

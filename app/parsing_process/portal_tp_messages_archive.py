@@ -35,7 +35,7 @@ MONTHS: dict = {
 BASE_SELECTOR: str = "//li[@class='ui-datascroller-item']"
 
 
-def portal_tp_messages(login: str, password: str, *args) -> DataFrame:
+def portal_tp_messages_archive(login: str, password: str, *args) -> DataFrame:
     driver = webdriver.Chrome()
     driver.get(
         'https://xn----7sb7akeedqd.xn--p1ai/platform/portal/' +
@@ -53,6 +53,18 @@ def portal_tp_messages(login: str, password: str, *args) -> DataFrame:
     wait.until(
         EC.element_to_be_clickable(
             (By.XPATH, "//li[@role='tab' and @data-index='2']")
+        )
+    ).click()
+
+    wait.until(
+        EC.element_to_be_clickable(
+            (
+                By.XPATH,
+                "//li[@class='ui-tabs-header ui-state-default ui-corner-top'" +
+                " and @role='tab' and @aria-expanded='false'" +
+                " and @aria-selected='false' and @data-index='2'" +
+                " and contains(., 'Архив')]/a"
+            )
         )
     ).click()
 
