@@ -128,11 +128,11 @@ def portal_tp_claims(login: str, password: str, *args) -> DataFrame:
             else:
                 CLAIMS.loc[len(CLAIMS)] = new_row
 
-        scroll_down(driver)
+        check_end_page: bool = scroll_down(driver)
 
-        if len(CLAIMS) == 0 or (
-            len(claims_ids) == count_claims_ids
-        ):
+        if (
+            len(CLAIMS) == 0 or len(claims_ids) == count_claims_ids
+        ) and not check_end_page:
             break
 
     driver.quit()

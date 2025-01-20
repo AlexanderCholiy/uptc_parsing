@@ -141,11 +141,11 @@ def portal_tp_messages(login: str, password: str, *args) -> DataFrame:
             else:
                 MESSAGES.loc[len(MESSAGES)] = new_row
 
-        scroll_down(driver)
+        check_end_page: bool = scroll_down(driver)
 
-        if len(MESSAGES) == 0 or (
-            len(messages_ids) == count_messages_ids
-        ):
+        if (
+            len(MESSAGES) == 0 or len(messages_ids) == count_messages_ids
+        ) and not check_end_page:
             break
 
     driver.quit()

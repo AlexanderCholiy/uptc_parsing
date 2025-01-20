@@ -17,7 +17,13 @@ from app.parsing_process.oboronenergo_claims import oboronenergo_claims
 from app.parsing_process.oboronenergo_messages import oboronenergo_messages
 from app.parsing_process.rzd_claims import rzd_claims
 from app.parsing_process.portal_tp_messages import portal_tp_messages
+from app.parsing_process.portal_tp_messages_archive import (
+    portal_tp_messages_archive
+)
 from app.parsing_process.portal_tp_claims import portal_tp_claims
+from app.parsing_process.portal_tp_claims_archive import (
+    portal_tp_claims_archive
+)
 from app.parsing_process.portal_tp_messages_details import (
     portal_tp_messages_details
 )
@@ -136,8 +142,16 @@ def run_parsing(
         portal_tp_rb_1.parsing(portal_tp_claims, save_df),
         filter_by_last_days
     )
+    portal_tp_rb_1.write_claims_data_to_db(
+        portal_tp_rb_1.parsing(portal_tp_claims_archive, save_df),
+        filter_by_last_days
+    )
     portal_tp_rb_1.write_messages_data_to_db(
         portal_tp_rb_1.parsing(portal_tp_messages, save_df),
+        filter_by_last_days
+    )
+    portal_tp_rb_1.write_messages_data_to_db(
+        portal_tp_rb_1.parsing(portal_tp_messages_archive, save_df),
         filter_by_last_days
     )
     portal_tp_rb_1.write_messages_data_to_db(
@@ -157,8 +171,16 @@ def run_parsing(
         portal_tp_vrt_1.parsing(portal_tp_claims, save_df),
         filter_by_last_days
     )
+    portal_tp_vrt_1.write_claims_data_to_db(
+        portal_tp_vrt_1.parsing(portal_tp_claims_archive, save_df),
+        filter_by_last_days
+    )
     portal_tp_vrt_1.write_messages_data_to_db(
         portal_tp_vrt_1.parsing(portal_tp_messages, save_df),
+        filter_by_last_days
+    )
+    portal_tp_vrt_1.write_messages_data_to_db(
+        portal_tp_vrt_1.parsing(portal_tp_messages_archive, save_df),
         filter_by_last_days
     )
     portal_tp_vrt_1.write_messages_data_to_db(
@@ -178,8 +200,16 @@ def run_parsing(
         portal_tp_vrt_1_1.parsing(portal_tp_claims, save_df),
         filter_by_last_days
     )
+    portal_tp_vrt_1_1.write_claims_data_to_db(
+        portal_tp_vrt_1_1.parsing(portal_tp_claims_archive, save_df),
+        filter_by_last_days
+    )
     portal_tp_vrt_1_1.write_messages_data_to_db(
         portal_tp_vrt_1_1.parsing(portal_tp_messages, save_df),
+        filter_by_last_days
+    )
+    portal_tp_vrt_1_1.write_messages_data_to_db(
+        portal_tp_vrt_1_1.parsing(portal_tp_messages_archive, save_df),
         filter_by_last_days
     )
     portal_tp_vrt_1_1.write_messages_data_to_db(
@@ -199,8 +229,16 @@ def run_parsing(
         portal_tp_pbk_1.parsing(portal_tp_claims, save_df),
         filter_by_last_days
     )
+    portal_tp_pbk_1.write_claims_data_to_db(
+        portal_tp_pbk_1.parsing(portal_tp_claims_archive, save_df),
+        filter_by_last_days
+    )
     portal_tp_pbk_1.write_messages_data_to_db(
         portal_tp_pbk_1.parsing(portal_tp_messages, save_df),
+        filter_by_last_days
+    )
+    portal_tp_pbk_1.write_messages_data_to_db(
+        portal_tp_pbk_1.parsing(portal_tp_messages_archive, save_df),
         filter_by_last_days
     )
     portal_tp_pbk_1.write_messages_data_to_db(
@@ -220,8 +258,16 @@ def run_parsing(
         portal_tp_pbk_sib_1.parsing(portal_tp_claims, save_df),
         filter_by_last_days
     )
+    portal_tp_pbk_sib_1.write_claims_data_to_db(
+        portal_tp_pbk_sib_1.parsing(portal_tp_claims_archive, save_df),
+        filter_by_last_days
+    )
     portal_tp_pbk_sib_1.write_messages_data_to_db(
         portal_tp_pbk_sib_1.parsing(portal_tp_messages, save_df),
+        filter_by_last_days
+    )
+    portal_tp_pbk_sib_1.write_messages_data_to_db(
+        portal_tp_pbk_sib_1.parsing(portal_tp_messages_archive, save_df),
         filter_by_last_days
     )
     portal_tp_pbk_sib_1.write_messages_data_to_db(
