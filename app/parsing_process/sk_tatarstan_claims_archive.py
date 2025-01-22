@@ -141,6 +141,18 @@ def sk_tatarstan_claims_archive(login: str, password: str, *args) -> DataFrame:
             )
         )
 
+        claims_address: WebElement = wait.until(
+            EC.visibility_of_all_elements_located(
+                (
+                    By.XPATH,
+                    BASE_SELECTOR +
+                    "//div[contains(@class, 'src-pages-claims-common-" +
+                    "claims-list-tech-connection-item-tc-claim-item-" +
+                    "module__address--_YAPv')]"
+                )
+            )
+        )
+
         for i in range(len(claims_number)):
             parsing_data = datetime.now()
             claim_number: str = claims_number[i].text.strip()
@@ -159,6 +171,7 @@ def sk_tatarstan_claims_archive(login: str, password: str, *args) -> DataFrame:
             claim_month = MONTHS.get(claim_month)
             claim_date: str = f'{claim_day} {claim_month} {claim_year}'
             claim_date: date = datetime.strptime(claim_date, '%d %m %Y').date()
+            claim_address: str = claims_address[i].text
 
             new_row = {
                 'parsing_data': parsing_data,
@@ -166,6 +179,7 @@ def sk_tatarstan_claims_archive(login: str, password: str, *args) -> DataFrame:
                 'claim_status': claim_status,
                 'claim_link': claim_link,
                 'claim_date': claim_date,
+                'claim_address': claim_address,
             }
 
             CLAIMS.loc[len(CLAIMS)] = new_row

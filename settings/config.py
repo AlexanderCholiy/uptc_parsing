@@ -148,6 +148,78 @@ class ROSSETI_MR_SETTINGS:
         'ROSSETI_MR_OOO_CAPITAl_POLE_USER_PSWD_1'
     )
     OOO_CAPITAL_POLE_USER_DECLARANT_ID: int = 9
+    # ---
+    NB_MR_SRK_TELECOM_1: str = os.getenv(
+        'ROSSETI_MR_NB_MR_SRK_TELECOM_1'
+    )
+    NB_MR_SRK_TELECOM_PSWD_1: str = os.getenv(
+        'ROSSETI_MR_NB_MR_SRK_TELECOM_PSWD_1'
+    )
+    NB_MR_SRK_TELECOM_USER_DECLARANT_ID: int = 11
+
+    PBK_SRK_TELECOM_1: str = os.getenv(
+        'ROSSETI_MR_PBK_SRK_TELECOM_1'
+    )
+    PBK_SRK_TELECOM_PSWD_1: str = os.getenv(
+        'ROSSETI_MR_PBK_SRK_TELECOM_PSWD_1'
+    )
+    PBK_SRK_TELECOM_USER_DECLARANT_ID: int = 12
+
+    RB_SRK_TELECOM_1: str = os.getenv(
+        'ROSSETI_MR_RB_SRK_TELECOM_1'
+    )
+    RB_SRK_TELECOM_PSWD_1: str = os.getenv(
+        'ROSSETI_MR_RB_SRK_TELECOM_PSWD_1'
+    )
+    RB_SRK_TELECOM_USER_DECLARANT_ID: int = 13
+    # ---
+    NB_MR_HARDENERGY_1: str = os.getenv(
+        'ROSSETI_MR_NB_MR_HARDENERGY_1'
+    )
+    NB_MR_HARDENERGY_PSWD_1: str = os.getenv(
+        'ROSSETI_MR_NB_MR_HARDENERGY_PSWD_1'
+    )
+    NB_MR_HARDENERGY_USER_DECLARANT_ID: int = 14
+
+    PBK_HARDENERGY_1: str = os.getenv(
+        'ROSSETI_MR_PBK_HARDENERGY_1'
+    )
+    PBK_HARDENERGY_PSWD_1: str = os.getenv(
+        'ROSSETI_MR_PBK_HARDENERGY_PSWD_1'
+    )
+    PBK_HARDENERGY_USER_DECLARANT_ID: int = 15
+
+    RB_HARDENERGY_1: str = os.getenv(
+        'ROSSETI_MR_RB_HARDENERGY_1'
+    )
+    RB_HARDENERGY_PSWD_1: str = os.getenv(
+        'ROSSETI_MR_RB_HARDENERGY_PSWD_1'
+    )
+    RB_HARDENERGY_USER_DECLARANT_ID: int = 16
+    # ---
+    NB_MR_PBK_RB_PROMISING_TECH_1: str = os.getenv(
+        'ROSSETI_MR_NB_MR_PBK_RB_PROMISING_TECH_1'
+    )
+    NB_MR_PBK_RB_PROMISING_TECH_PSWD_1: str = os.getenv(
+        'ROSSETI_MR_NB_MR_PBK_RB_PROMISING_TECH_PSWD_1'
+    )
+    NB_MR_PBK_RB_PROMISING_TECH_USER_DECLARANT_ID: int = 17
+
+    PBK_PMK_1: str = os.getenv(
+        'ROSSETI_MR_PBK_PMK_1'
+    )
+    PBK_PMK_PSWD_1: str = os.getenv(
+        'ROSSETI_MR_PBK_PMK_PSWD_1'
+    )
+    PBK_PMK_USER_DECLARANT_ID: int = 18
+
+    PBK_INFRASCOM_1: str = os.getenv(
+        'ROSSETI_MR_PBK_INFRASCOM_1'
+    )
+    PBK_INFRASCOM_PSWD_1: str = os.getenv(
+        'ROSSETI_MR_PBK_INFRASCOM_PSWD_1'
+    )
+    PBK_INFRASCOM_USER_DECLARANT_ID: int = 19
 
 
 db_settings = DB_SETTINGS()
