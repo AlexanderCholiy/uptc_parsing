@@ -41,16 +41,6 @@ def rosseti_mr_claims(login: str, password: str, *args) -> DataFrame:
             'return document.readyState'
         ) == 'complete'
     )
-    wait.until(
-        EC.presence_of_element_located(
-            (By.XPATH, "//a[contains(@class, 'custom-combobox-toggle')]")
-        )
-    ).click()
-    wait.until(
-        EC.presence_of_element_located(
-            (By.XPATH, "//li[contains(text(), '100')]")
-        )
-    ).click()
 
     def take_data_from_page() -> date:
         wait.until(
@@ -112,7 +102,30 @@ def rosseti_mr_claims(login: str, password: str, *args) -> DataFrame:
 
         return min_claim_date
 
-    last_page: bool = False
+    if 'Показано 0 из 0 отобранных заявок' in (
+        WebDriverWait(driver, PARSING_DELAY).until(
+            EC.presence_of_element_located((By.ID, "tab-content"))
+        ).text
+    ):
+        driver.quit()
+        return CLAIMS
+
+    try:
+        WebDriverWait(driver, PARSING_DELAY).until(
+            EC.presence_of_element_located(
+                (By.XPATH, "//a[contains(@class, 'custom-combobox-toggle')]")
+            )
+        ).click()
+        WebDriverWait(driver, PARSING_DELAY).until(
+            EC.presence_of_element_located(
+                (By.XPATH, "//li[contains(text(), '100')]")
+            )
+        ).click()
+        last_page: bool = False
+    except TimeoutException:
+        take_data_from_page()
+        last_page: bool = True
+
     while not last_page:
         try:
             # if take_data_from_page() < date.today() - timedelta(days=365):

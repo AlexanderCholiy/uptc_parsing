@@ -456,7 +456,7 @@ def run_parsing(
         rosseti_mr(*params)
 
 
-def log_completion(start_time):
+def log_completion(start_time: datetime):
     delta_time = round((datetime.now() - start_time).total_seconds())
     print(
         Fore.MAGENTA + Style.BRIGHT +

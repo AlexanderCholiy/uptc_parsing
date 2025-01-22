@@ -43,16 +43,6 @@ def rosseti_mr_messages(login: str, password: str, *args) -> DataFrame:
             'return document.readyState'
         ) == 'complete'
     )
-    wait.until(
-        EC.presence_of_element_located(
-            (By.XPATH, "//a[contains(@class, 'custom-combobox-toggle')]")
-        )
-    ).click()
-    wait.until(
-        EC.presence_of_element_located(
-            (By.XPATH, "//li[contains(text(), '100')]")
-        )
-    ).click()
 
     def take_data_from_page() -> date:
         wait.until(
@@ -118,6 +108,38 @@ def rosseti_mr_messages(login: str, password: str, *args) -> DataFrame:
                 continue
 
         return min_message_date
+
+    try:
+        WebDriverWait(driver, PARSING_DELAY).until(
+            EC.presence_of_element_located(
+                (
+                    By.XPATH,
+                    "//div[@class='strong-shadow request-table-w1 " +
+                    "table-scroll mobile-table-zai']/h1[text()=" +
+                    "'У вас пока нет обращений']"
+                )
+            )
+        )
+        driver.quit()
+        return MESSAGES
+    except TimeoutException:
+        pass
+
+    try:
+        WebDriverWait(driver, PARSING_DELAY).until(
+            EC.presence_of_element_located(
+                (By.XPATH, "//a[contains(@class, 'custom-combobox-toggle')]")
+            )
+        ).click()
+        WebDriverWait(driver, PARSING_DELAY).until(
+            EC.presence_of_element_located(
+                (By.XPATH, "//li[contains(text(), '100')]")
+            )
+        ).click()
+        last_page: bool = False
+    except TimeoutException:
+        take_data_from_page()
+        last_page: bool = True
 
     last_page: bool = False
     while not last_page:
