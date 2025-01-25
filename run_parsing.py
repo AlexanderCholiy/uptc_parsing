@@ -181,6 +181,10 @@ def run_parsing(
         #     instance.parsing(portal_tp_claims_archive, save_df),
         #     filter_by_last_days
         # )
+        instance.write_claims_data_to_db(
+            instance.parsing(portal_tp_claims_details, save_df),
+            None, True
+        )
         # instance.write_messages_data_to_db(
         #     instance.parsing(portal_tp_messages, save_df),
         #     filter_by_last_days
@@ -193,7 +197,6 @@ def run_parsing(
         #     instance.parsing(portal_tp_messages_details, save_df),
         #     None, True
         # )
-        instance.parsing(portal_tp_claims_details, save_df)
 
     portal_tp_data = [
         (
