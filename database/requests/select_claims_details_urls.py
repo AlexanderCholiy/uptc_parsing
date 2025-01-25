@@ -13,9 +13,9 @@ def select_claims_details_urls(
         AND cc.constant_text IS NOT NULL
         AND cl.personal_area_id = {personal_area_id}
         AND cl.declarant_id = {declarant_id}
-        AND cc.id NOT IN (
+        AND cc.claim_id NOT IN (
             SELECT
-                cc.id
+                cc.claim_id
             FROM
                 claims as cl INNER JOIN constants as cc
                 ON cl.id = cc.claim_id

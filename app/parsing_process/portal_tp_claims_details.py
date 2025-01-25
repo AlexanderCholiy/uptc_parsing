@@ -26,13 +26,13 @@ PARSING_DELAY: int = 5
 PARSING_TIMER: int = 30
 
 
-def bad_response(login: str, url_detail: str) -> bool:
+def bad_response(login: str, url_detail: str, claim_number: str) -> bool:
     print(
         Fore.RED + Style.DIM +
         'Проверьте ссылку в ' +
         Style.RESET_ALL + Fore.WHITE + Style.BRIGHT +
         str(portal_tp_claims_details.__name__) +
-        f' ({login})' +
+        f' ({login} [{claim_number}])' +
         Style.RESET_ALL + Fore.RED + Style.DIM +
         ' — ' +
         Style.RESET_ALL + Fore.WHITE + Style.BRIGHT +
@@ -74,7 +74,9 @@ def claim_address_variant_2(wait_elements: WebDriverWait) -> str | None:
                     " | //*[contains(@id, " +
                     "'sMw_DeviceAddrRegionRef:group')][1]" +
                     " | //*[contains(@id, 'sMw_Address_object:group')][1]" +
-                    " | //*[contains(@id, 'sMw_DeviceAddrIndex:group')][1]"
+                    " | //*[contains(@id, 'sMw_DeviceAddrIndex:group')][1]" +
+                    " | //*[contains(@id, 'sMw_DeviceAddrCadastr:group')][1]" +
+                    " | //*[contains(@id, 'sMw_energyDeviceName:group')][1]"
                 )
             )
         )
@@ -156,22 +158,24 @@ def portal_tp_claims_details(
 
         claim_address_1 = claim_address_variant_1(wait_elements)
         claim_address_2 = claim_address_variant_2(wait_elements)
-        if not claim_address_1 and not claim_address_2:
-            find_bad_link = bad_response(login, url_detail)
+        if claim_address_1 is None and claim_address_2 is None:
+            find_bad_link = bad_response(login, url_detail, claim_number)
             driver.quit()
             driver = webdriver.Chrome()
             driver.maximize_window()
             continue
 
-        if claim_address_1 is None:
+        if not claim_address_1:
             claim_address = claim_address_2
-        elif claim_address_2 is None:
+        elif not claim_address_2:
             claim_address = claim_address_1
-        else:
+        elif claim_address_1 and claim_address_2:
             claim_address = (
                 f'{claim_address_2}.\nОписание местоположения: ' +
                 f'{claim_address_1}.'
             )
+        else:
+            continue  # Есть заявки где поле местоположение пустое.
 
         parsing_data = datetime.now()
         new_row = {
