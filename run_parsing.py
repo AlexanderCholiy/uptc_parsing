@@ -476,7 +476,7 @@ if __name__ == '__main__':
     print(Fore.MAGENTA + Style.BRIGHT + f'Запуск {__file__}')
     is_keyboard_interrupt: bool = False
     try:
-        run_parsing(filter_by_last_days=None)
+        run_parsing(filter_by_last_days=90)
     except KeyboardInterrupt:
         log_completion(start_time)
         is_keyboard_interrupt = True

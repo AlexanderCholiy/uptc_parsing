@@ -76,7 +76,9 @@ def claim_address_variant_2(wait_elements: WebDriverWait) -> str | None:
                     " | //*[contains(@id, 'sMw_Address_object:group')][1]" +
                     " | //*[contains(@id, 'sMw_DeviceAddrIndex:group')][1]" +
                     " | //*[contains(@id, 'sMw_DeviceAddrCadastr:group')][1]" +
-                    " | //*[contains(@id, 'sMw_energyDeviceName:group')][1]"
+                    " | //*[contains(@id, 'sMw_energyDeviceName:group')][1]" +
+                    " | //*[contains(@id, 'sMw_fiasDeviceAddr:group')][1]" +
+                    " | //*[contains(@id, 'sMw_DeviceAddrNotFound:group')][1]"
                 )
             )
         )
