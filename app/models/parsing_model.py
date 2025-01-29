@@ -31,6 +31,9 @@ from database.requests.update_messages_states import (  # noqa: E402
 from database.requests.update_messages_constants import (  # noqa: E402
     request_update_messages_constants
 )
+from database.requests.add_related_claims_with_messages import (  # noqa: E402
+    add_related_claims_with_messages
+)
 
 
 init(autoreset=True)
@@ -206,7 +209,7 @@ class PARSING:
 
             print(
                 Fore.CYAN + Style.DIM +
-                f'Загрузка {data_type}s для ' +
+                f'Загрузка {data_type} для ' +
                 Style.RESET_ALL + Fore.WHITE + Style.BRIGHT +
                 self.instance_name +
                 Style.RESET_ALL + Fore.CYAN + Style.DIM +
@@ -252,3 +255,9 @@ class PARSING:
             request_update_states_fn=request_update_messages_states,
             request_update_constants_fn=request_update_messages_constants
         )
+        if not only_constants:
+            sql_queries(
+                add_related_claims_with_messages(
+                    self.personal_area_id, self.declarant_id
+                )
+            )

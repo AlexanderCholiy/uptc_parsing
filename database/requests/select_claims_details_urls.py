@@ -1,5 +1,5 @@
 def select_claims_details_urls(
-    personal_area_id: int, declarant_id: int
+    personal_area_id: int, declarant_id: int, check_constant_type: int
 ) -> str:
     return (f'''
     SELECT DISTINCT
@@ -13,4 +13,16 @@ def select_claims_details_urls(
         AND cc.constant_text IS NOT NULL
         AND cl.personal_area_id = {personal_area_id}
         AND cl.declarant_id = {declarant_id}
+        AND cc.claim_id NOT IN (
+            SELECT
+                cc.claim_id
+            FROM
+                claims as cl INNER JOIN constants as cc
+                ON cl.id = cc.claim_id
+            WHERE
+                cc.constant_type = {check_constant_type}
+                AND cc.constant_text IS NOT NULL
+                AND cl.personal_area_id = {personal_area_id}
+                AND cl.declarant_id = {declarant_id}
+        )
     ''')

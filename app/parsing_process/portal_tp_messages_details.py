@@ -32,7 +32,7 @@ def portal_tp_messages_details(
 ) -> DataFrame:
     MESSAGES = DataFrame(columns=MESSAGES_COLUMNS)
     messages_numbers_urls: List[Tuple[str, str]] = sql_queries(
-        select_messages_details_urls(personal_area_id, declarant_id)
+        select_messages_details_urls(personal_area_id, declarant_id, 1020)
     )
 
     driver = webdriver.Chrome()
