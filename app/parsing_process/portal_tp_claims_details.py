@@ -107,7 +107,6 @@ def portal_tp_claims_details(
                     f'{key}: {value}' for key, value in address_tuples if value
                 ]
                 claim_address = '. '.join(address_parts) + '.'
-                claim_address = str(claim_address)
                 find_bad_link = False
             except TimeoutException:
                 print(
