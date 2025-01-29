@@ -52,20 +52,27 @@ TIME_DELAY: int = 120
 
 
 def run_parsing(
-    save_df: bool = True, filter_by_last_days: Optional[int] = None
+    save_df: bool = True,
+    filter_by_last_days: Optional[int] = None,
+    run_oboronenergo: bool = True,
+    run_rzd: bool = True,
+    run_portal_tp: bool = True,
+    run_mosoblenergo: bool = True,
+    run_sk_tatarstan: bool = True,
+    run_rosseti_mr: bool = True
 ):
     """
     Parametrs:
     ---------
-        save_df (bool): Если True, данные будут сохранены в формате .xlsx в
-        папке 'data'.
+    - save_df (bool): Если True, данные будут сохранены в формате .xlsx в
+    папке 'data'.
 
-        filter_by_last_days (int or None):
-            Если None, будут обновлены все записи.
-            Если указано значение (например 30), будут обновлены только
-            актуальные записи за последние N дней.
+    - filter_by_last_days (int or None):
+        Если None, будут обновлены все записи.
+        Если указано значение (например 30), будут обновлены только
+        актуальные записи за последние N дней.
     """
-    # АО Оборонэнерго:
+    # **************************** АО Оборонэнерго ****************************
     def oboronenergo(
         instance_name: str,
         login: str,
@@ -100,10 +107,9 @@ def run_parsing(
         )
     ]
 
-    for params in oboronenergo_data:
-        oboronenergo(*params)
+    [oboronenergo(*params) for params in oboronenergo_data if run_oboronenergo]
 
-    # ОАО РЖД:
+    # ******************************** ОАО РЖД ********************************
     def rzd(
         instance_name: str,
         login: str,
@@ -154,10 +160,9 @@ def run_parsing(
         )
     ]
 
-    for params in rzd_data:
-        rzd(*params)
+    [rzd(*params) for params in rzd_data if run_rzd]
 
-    # Портал ТП:
+    # ******************************* Портал ТП *******************************
     def portal_tp(
         instance_name: str,
         login: str,
@@ -236,62 +241,74 @@ def run_parsing(
         )
     ]
 
-    for params in portal_tp_data:
-        portal_tp(*params)
+    [portal_tp(*params) for params in portal_tp_data if run_portal_tp]
 
-    # Мособлэнерго (ночью код подтверждения приходит не всегда):
-    if DAY_START <= datetime.now() <= DAY_END:
-        def mosoblenergo(
-            instance_name: str,
-            login: str,
-            declarant_id: int,
-            declarant_name: str
-        ):
-            instance = PARSING(
-                instance_name,
-                mosoblenergo_settings.PERSONAL_AREA_ID,
-                login,
-                None,
-                declarant_id,
-                declarant_name
-            )
-            instance.write_claims_data_to_db(
-                instance.parsing(mosoblenergo_claims, save_df),
-                filter_by_last_days
-            )
+    # ******* Мособлэнерго (ночью код подтверждения приходит не всегда) *******
+    def mosoblenergo(
+        instance_name: str,
+        login: str,
+        declarant_id: int,
+        declarant_name: str
+    ):
+        instance = PARSING(
+            instance_name,
+            mosoblenergo_settings.PERSONAL_AREA_ID,
+            login,
+            None,
+            declarant_id,
+            declarant_name
+        )
+        instance.write_claims_data_to_db(
+            instance.parsing(mosoblenergo_claims, save_df),
+            filter_by_last_days
+        )
 
-        mosoblenergo_data = [
-            (
-                'mosoblenergo_vr_top_1',
-                mosoblenergo_settings.VR_TOP_USER_LOGIN_1,
-                mosoblenergo_settings.VR_TOP_USER_DECLARANT_ID,
-                'VR_TOP_1'
-            ),
-            (
-                'mosoblenergo_new_towers_mr_1',
-                mosoblenergo_settings.NEW_TOWERS_MR_USER_LOGIN_1,
-                mosoblenergo_settings.NEW_TOWERS_MR_USER_DECLARANT_ID,
-                'NEW_TOWERS_MR_1'
-            ),
-            (
-                'mosoblenergo_pbk_1',
-                mosoblenergo_settings.PBK_USER_LOGIN_1,
-                mosoblenergo_settings.PBK_USER_DECLARANT_ID,
-                'PBK_1'
-            ),
-            (
-                'mosoblenergo_rb_1',
-                mosoblenergo_settings.RB_USER_LOGIN_1,
-                mosoblenergo_settings.RB_USER_DECLARANT_ID,
-                'RB_1'
-            ),
-        ]
+        time.sleep(TIME_DELAY)
 
-        for params in mosoblenergo_data:
-            mosoblenergo(*params)
-            time.sleep(TIME_DELAY)
+    mosoblenergo_data = [
+        (
+            'mosoblenergo_vr_top_1',
+            mosoblenergo_settings.VR_TOP_USER_LOGIN_1,
+            mosoblenergo_settings.VR_TOP_USER_DECLARANT_ID,
+            'VR_TOP_1'
+        ),
+        (
+            'mosoblenergo_new_towers_mr_1',
+            mosoblenergo_settings.NEW_TOWERS_MR_USER_LOGIN_1,
+            mosoblenergo_settings.NEW_TOWERS_MR_USER_DECLARANT_ID,
+            'NEW_TOWERS_MR_1'
+        ),
+        (
+            'mosoblenergo_pbk_1',
+            mosoblenergo_settings.PBK_USER_LOGIN_1,
+            mosoblenergo_settings.PBK_USER_DECLARANT_ID,
+            'PBK_1'
+        ),
+        (
+            'mosoblenergo_rb_1',
+            mosoblenergo_settings.RB_USER_LOGIN_1,
+            mosoblenergo_settings.RB_USER_DECLARANT_ID,
+            'RB_1'
+        ),
+        (
+            'mosoblenergo_nb_mr_pbk_rb_hardenergy_1',
+            mosoblenergo_settings.NB_MR_PBK_RB_HARDENERGY_USER_LOGIN_1,
+            mosoblenergo_settings.NB_MR_PBK_RB_HARDENERGY_DECLARANT_ID,
+            'NB_MR_PBK_RB_HARDENERGY'
+        ),
+        (
+            'mosoblenergo_nb_mr_pbk_rb_promising_tech_1',
+            mosoblenergo_settings.NB_MR_PBK_RB_PROMISING_TECH_USER_LOGIN_1,
+            mosoblenergo_settings.NB_MR_PBK_RB_PROMISING_TECH_DECLARANT_ID,
+            'NB_MR_PBK_RB_PROMISING_TECH'
+        ),
+    ]
 
-    # СК Татарстан:
+    [mosoblenergo(*params) for params in mosoblenergo_data if (
+        run_mosoblenergo and DAY_START <= datetime.now() <= DAY_END
+    )]
+
+    # ***************************** СК Татарстан ******************************
     def sk_tatarstan(
         instance_name: str,
         login: str,
@@ -330,10 +347,9 @@ def run_parsing(
         ),
     ]
 
-    for params in sk_tatarstan_data:
-        sk_tatarstan(*params)
+    [sk_tatarstan(*params) for params in sk_tatarstan_data if run_sk_tatarstan]
 
-    # Россети МР:
+    # ****************************** Россети МР *******************************
     def rosseti_mr(
         instance_name: str,
         login: str,
@@ -459,8 +475,7 @@ def run_parsing(
         ),
     ]
 
-    for params in rosseti_mr_data:
-        rosseti_mr(*params)
+    [rosseti_mr(*params) for params in rosseti_mr_data if run_rosseti_mr]
 
 
 def log_completion(start_time: datetime):
@@ -476,7 +491,15 @@ if __name__ == '__main__':
     print(Fore.MAGENTA + Style.BRIGHT + f'Запуск {__file__}')
     is_keyboard_interrupt: bool = False
     try:
-        run_parsing(filter_by_last_days=90)
+        run_parsing(
+            filter_by_last_days=90,
+            run_oboronenergo=True,
+            run_rzd=True,
+            run_portal_tp=True,
+            run_mosoblenergo=True,
+            run_sk_tatarstan=True,
+            run_rosseti_mr=True
+        )
     except KeyboardInterrupt:
         log_completion(start_time)
         is_keyboard_interrupt = True
