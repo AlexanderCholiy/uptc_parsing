@@ -3,6 +3,7 @@ import sys
 import time
 import pytz
 from datetime import datetime, date
+from typing import Optional
 
 from pandas import DataFrame
 from selenium import webdriver
@@ -68,6 +69,7 @@ LIST_APP_LINK: str = (
     "//div[@class='application ng-scope']/ul[@class='application-nav']" +
     "/li[@ng-show='!bid.AllowEdit']/a[@class='application-nav__link']"
 )
+CLAIMS_BLOCK: str = "//div[@class='application ng-scope']"
 
 
 def mosoblenergo_claims(login: str, *args) -> DataFrame:
@@ -128,6 +130,9 @@ def mosoblenergo_claims(login: str, *args) -> DataFrame:
         claims_link = wait.until(
             EC.presence_of_all_elements_located((By.XPATH, LIST_APP_LINK))
         )
+        claims_block = wait.until(
+            EC.presence_of_all_elements_located((By.XPATH, CLAIMS_BLOCK))
+        )
 
         for j in range(len(claims_number)):
             parsing_data = datetime.now()
@@ -151,6 +156,15 @@ def mosoblenergo_claims(login: str, *args) -> DataFrame:
                 claim_date, '%d.%m.%Y'
             ).date()
 
+            claim_documents_link_block = (
+                claims_block[j].find_element(
+                    By.XPATH, ".//a[contains(text(), 'Входящие документы')]"
+                )
+            )
+            claim_documents_link = claim_documents_link_block.get_attribute(
+                'href'
+            ) if claim_documents_link_block.is_displayed() else None
+
             new_row = {
                 'parsing_data': parsing_data,
                 'claim_number': claim_number,
@@ -158,6 +172,7 @@ def mosoblenergo_claims(login: str, *args) -> DataFrame:
                 'claim_link': claim_link,
                 'claim_date': claim_date,
                 'claim_inner_number': claim_inner_number,
+                'claim_documents_link': claim_documents_link,
             }
 
             CLAIMS.loc[len(CLAIMS)] = new_row

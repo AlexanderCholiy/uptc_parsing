@@ -49,6 +49,7 @@ CLAIMS_COLUMNS: List[str] = [
     'claim_inner_number',
     'claim_response',
     'claim_address',
+    'claim_documents_link',
 ]
 
 MESSAGES_COLUMNS: List[str] = [
@@ -71,6 +72,7 @@ CLAIMS_CONSTANTS_TYPES: Dict[str, int] = {
     'claim_inner_number': 1080,
     'claim_response': 1090,
     'claim_address': 1100,
+    'claim_documents_link': 1050,
 }
 MESSAGES_CONSTANTS_TYPES: Dict[str, int] = {
     'message_grid': 1010,
