@@ -279,12 +279,12 @@ def run_parsing(
             mosoblenergo_settings.NEW_TOWERS_MR_USER_DECLARANT_ID,
             'NEW_TOWERS_MR_1'
         ),
-        # (
-        #     'mosoblenergo_pbk_1',
-        #     mosoblenergo_settings.PBK_USER_LOGIN_1,
-        #     mosoblenergo_settings.PBK_USER_DECLARANT_ID,
-        #     'PBK_1'
-        # ),
+        (
+            'mosoblenergo_pbk_1',
+            mosoblenergo_settings.PBK_USER_LOGIN_1,
+            mosoblenergo_settings.PBK_USER_DECLARANT_ID,
+            'PBK_1'
+        ),
         (
             'mosoblenergo_rb_1',
             mosoblenergo_settings.RB_USER_LOGIN_1,
@@ -493,13 +493,13 @@ if __name__ == '__main__':
     is_keyboard_interrupt: bool = False
     try:
         run_parsing(
-            filter_by_last_days=None,  # 90
-            run_oboronenergo=False,
-            run_rzd=False,
-            run_portal_tp=False,
+            filter_by_last_days=90,
+            run_oboronenergo=True,
+            run_rzd=True,
+            run_portal_tp=True,
             run_mosoblenergo=True,
-            run_sk_tatarstan=False,
-            run_rosseti_mr=False
+            run_sk_tatarstan=True,
+            run_rosseti_mr=True
         )
     except KeyboardInterrupt:
         log_completion(start_time)
