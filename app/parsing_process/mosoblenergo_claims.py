@@ -163,6 +163,8 @@ def mosoblenergo_claims(login: str, *args) -> DataFrame:
             )
             claim_documents_link = claim_documents_link_block.get_attribute(
                 'href'
+            ).replace(
+                '/desktopapplication/', '/desktop/application/'
             ) if claim_documents_link_block.is_displayed() else None
 
             new_row = {
