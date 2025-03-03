@@ -92,7 +92,6 @@ def mosoblenergo_claims(login: str, *args) -> DataFrame:
         bot_email_settings.BOT_EMAIL_LOGIN_1,
         bot_email_settings.BOT_EMAIL_PSWD_1,
         bot_email_settings.EMAIL_SERVER,
-        login
     )
     confirmation_code = instance_email.take_code_from_email()
     if not confirmation_code:

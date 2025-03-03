@@ -253,44 +253,42 @@ def run_parsing(
         )
 
     mosoblenergo_data = [
-        (
-            'mosoblenergo_vr_top_1',
-            mosoblenergo_settings.VR_TOP_USER_LOGIN_1,
-            mosoblenergo_settings.VR_TOP_USER_DECLARANT_ID,
-            'VR_TOP_1'
-        ),
-        # Пользователь не зарегестрирован
         # (
-        #     'mosoblenergo_new_towers_mr_1',
-        #     mosoblenergo_settings.NEW_TOWERS_MR_USER_LOGIN_1,
-        #     mosoblenergo_settings.NEW_TOWERS_MR_USER_DECLARANT_ID,
-        #     'NEW_TOWERS_MR_1'
+        #     'mosoblenergo_vr_top_1',
+        #     mosoblenergo_settings.VR_TOP_USER_LOGIN_1,
+        #     mosoblenergo_settings.VR_TOP_USER_DECLARANT_ID,
+        #     'VR_TOP_1'
         # ),
         (
-            'mosoblenergo_pbk_1',
-            mosoblenergo_settings.PBK_USER_LOGIN_1,
-            mosoblenergo_settings.PBK_USER_DECLARANT_ID,
-            'PBK_1'
+            'mosoblenergo_new_towers_mr_1',
+            mosoblenergo_settings.NEW_TOWERS_MR_USER_LOGIN_1,
+            mosoblenergo_settings.NEW_TOWERS_MR_USER_DECLARANT_ID,
+            'NEW_TOWERS_MR_1'
         ),
-        # Пользователь не зарегестрирован
         # (
-        #     'mosoblenergo_rb_1',
-        #     mosoblenergo_settings.RB_USER_LOGIN_1,
-        #     mosoblenergo_settings.RB_USER_DECLARANT_ID,
-        #     'RB_1'
+        #     'mosoblenergo_pbk_1',
+        #     mosoblenergo_settings.PBK_USER_LOGIN_1,
+        #     mosoblenergo_settings.PBK_USER_DECLARANT_ID,
+        #     'PBK_1'
         # ),
         (
-            'mosoblenergo_nb_mr_pbk_rb_hardenergy_1',
-            mosoblenergo_settings.NB_MR_PBK_RB_HARDENERGY_USER_LOGIN_1,
-            mosoblenergo_settings.NB_MR_PBK_RB_HARDENERGY_DECLARANT_ID,
-            'NB_MR_PBK_RB_HARDENERGY'
+            'mosoblenergo_rb_1',
+            mosoblenergo_settings.RB_USER_LOGIN_1,
+            mosoblenergo_settings.RB_USER_DECLARANT_ID,
+            'RB_1'
         ),
-        (
-            'mosoblenergo_nb_mr_pbk_rb_promising_tech_1',
-            mosoblenergo_settings.NB_MR_PBK_RB_PROMISING_TECH_USER_LOGIN_1,
-            mosoblenergo_settings.NB_MR_PBK_RB_PROMISING_TECH_DECLARANT_ID,
-            'NB_MR_PBK_RB_PROMISING_TECH'
-        ),
+        # (
+        #     'mosoblenergo_nb_mr_pbk_rb_hardenergy_1',
+        #     mosoblenergo_settings.NB_MR_PBK_RB_HARDENERGY_USER_LOGIN_1,
+        #     mosoblenergo_settings.NB_MR_PBK_RB_HARDENERGY_DECLARANT_ID,
+        #     'NB_MR_PBK_RB_HARDENERGY'
+        # ),
+        # (
+        #     'mosoblenergo_nb_mr_pbk_rb_promising_tech_1',
+        #     mosoblenergo_settings.NB_MR_PBK_RB_PROMISING_TECH_USER_LOGIN_1,
+        #     mosoblenergo_settings.NB_MR_PBK_RB_PROMISING_TECH_DECLARANT_ID,
+        #     'NB_MR_PBK_RB_PROMISING_TECH'
+        # ),
     ]
 
     # Ночью код подтверждения приходит не всегда:
@@ -483,12 +481,12 @@ if __name__ == '__main__':
     try:
         run_parsing(
             filter_by_last_days=90,
-            run_oboronenergo=False,
-            run_rzd=False,
-            run_portal_tp=False,
+            run_oboronenergo=True,
+            run_rzd=True,
+            run_portal_tp=True,
             run_mosoblenergo=True,
-            run_sk_tatarstan=False,
-            run_rosseti_mr=False,
+            run_sk_tatarstan=True,
+            run_rosseti_mr=True,
         )
     except KeyboardInterrupt:
         log_completion(start_time)
