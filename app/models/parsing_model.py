@@ -1,11 +1,11 @@
 import os
 import sys
-from typing import Optional, Callable, Dict, List
 from datetime import date, timedelta
+from typing import Callable, Dict, List, Optional
 
 import pandas as pd
+from colorama import Fore, Style, init
 from pandas import DataFrame
-from colorama import init, Fore, Style
 
 CURRENT_DIR: str = os.path.dirname(__file__)
 sys.path.append(os.path.abspath(os.path.join(CURRENT_DIR, '..', '..')))
@@ -13,28 +13,20 @@ from app.common.log_result import log_result  # noqa: E402
 from app.common.log_timer import log_timer  # noqa: E402
 from app.common.write_df_to_excel import write_df_to_excel  # noqa: E402
 from database.db_conn import sql_queries  # noqa: E402
-from database.requests.update_claims_numbers import (  # noqa: E402
-    request_update_claims_numbers
-)
-from database.requests.update_claims_states import (  # noqa: E402
-    request_update_claims_states
-)
-from database.requests.update_claims_constants import (  # noqa: E402
-    request_update_claims_constants
-)
-from database.requests.update_messages_numbers import (  # noqa: E402
-    request_update_messages_numbers
-)
-from database.requests.update_messages_states import (  # noqa: E402
-    request_update_messages_states
-)
-from database.requests.update_messages_constants import (  # noqa: E402
-    request_update_messages_constants
-)
-from database.requests.add_related_claims_with_messages import (  # noqa: E402
-    add_related_claims_with_messages
-)
-
+from database.requests.add_related_claims_with_messages import \
+    add_related_claims_with_messages  # noqa: E402
+from database.requests.update_claims_constants import \
+    request_update_claims_constants  # noqa: E402
+from database.requests.update_claims_numbers import \
+    request_update_claims_numbers  # noqa: E402
+from database.requests.update_claims_states import \
+    request_update_claims_states  # noqa: E402
+from database.requests.update_messages_constants import \
+    request_update_messages_constants  # noqa: E402
+from database.requests.update_messages_numbers import \
+    request_update_messages_numbers  # noqa: E402
+from database.requests.update_messages_states import \
+    request_update_messages_states  # noqa: E402
 
 init(autoreset=True)
 PARSING_DATA_DIR: str = os.path.join(CURRENT_DIR, '..', '..', 'data')

@@ -1,13 +1,12 @@
+import asyncio
 import os
 import sys
 
-import asyncio
 import pandas as pd
 from aiogram import Router
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
 from app.common.prepare_notification import prepare_notification  # noqa: E402
-
 
 DELAY: int = 900
 notification_route = Router()

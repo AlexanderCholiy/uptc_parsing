@@ -1,25 +1,23 @@
 import os
 import sys
 from datetime import datetime
-from typing import Tuple, List
+from typing import List, Tuple
 
+from colorama import Fore, Style, init
 from pandas import DataFrame
-from colorama import init, Fore, Style
 from selenium import webdriver
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
 
 CURRENT_DIR: str = os.path.dirname(__file__)
 sys.path.append(os.path.join(CURRENT_DIR, '..', '..'))
-from database.db_conn import sql_queries  # noqa: E402
-from database.requests.select_messages_details_urls import (  # noqa: E402
-    select_messages_details_urls
-)
-from app.models.parsing_model import MESSAGES_COLUMNS  # noqa: E402
 from app.common.authorize_form import authorize_form  # noqa: E402
-
+from app.models.parsing_model import MESSAGES_COLUMNS  # noqa: E402
+from database.db_conn import sql_queries  # noqa: E402
+from database.requests.select_messages_details_urls import \
+    select_messages_details_urls  # noqa: E402
 
 init(autoreset=True)
 PARSING_DELAY: int = 3

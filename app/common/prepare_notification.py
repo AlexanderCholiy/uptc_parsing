@@ -1,7 +1,7 @@
 import os
-import pandas as pd
 from datetime import datetime
 
+import pandas as pd
 
 LOG_DIR: str = os.path.join(os.path.dirname(__file__), '..', '..', 'log')
 LOG_FILE_PATH: str = os.path.join(LOG_DIR, 'result.log')

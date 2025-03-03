@@ -1,16 +1,15 @@
+import logging
 import os
 import sys
-from typing import Union
 from contextlib import closing
-import logging
+from typing import Union
 
 import psycopg2
-from colorama import Style, Fore, init
+from colorama import Fore, Style, init
 
 CURRENT_DIR: str = os.path.dirname(__file__)
 sys.path.append(os.path.abspath(os.path.join(CURRENT_DIR, '..')))
 from settings.config import db_settings  # noqa: E402
-
 
 init(autoreset=True)
 

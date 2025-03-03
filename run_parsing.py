@@ -1,44 +1,32 @@
-import time
 from datetime import datetime
 from typing import Optional
 
-from colorama import init, Fore, Style
+from colorama import Fore, Style, init
 
-from settings.config import (
-    oboronenergo_settings,
-    rzd_settings,
-    portal_tp_settings,
-    mosoblenergo_settings,
-    sk_tatarstan_settings,
-    rosseti_mr_settings,
-)
 from app.models.parsing_model import PARSING
+from app.parsing_process.mosoblenergo_claims import mosoblenergo_claims
 from app.parsing_process.oboronenergo_claims import oboronenergo_claims
 from app.parsing_process.oboronenergo_messages import oboronenergo_messages
-from app.parsing_process.rzd_claims import rzd_claims
-from app.parsing_process.portal_tp_messages import portal_tp_messages
-from app.parsing_process.portal_tp_messages_archive import (
-    portal_tp_messages_archive
-)
 from app.parsing_process.portal_tp_claims import portal_tp_claims
-from app.parsing_process.portal_tp_claims_archive import (
+from app.parsing_process.portal_tp_claims_archive import \
     portal_tp_claims_archive
-)
-from app.parsing_process.portal_tp_messages_details import (
-    portal_tp_messages_details
-)
-from app.parsing_process.portal_tp_claims_details import (
+from app.parsing_process.portal_tp_claims_details import \
     portal_tp_claims_details
-)
-from app.parsing_process.mosoblenergo_claims import mosoblenergo_claims
-from app.parsing_process.sk_tatarstan_claims import sk_tatarstan_claims
-from app.parsing_process.sk_tatarstan_messages import sk_tatarstan_messages
-from app.parsing_process.sk_tatarstan_claims_archive import (
-    sk_tatarstan_claims_archive
-)
+from app.parsing_process.portal_tp_messages import portal_tp_messages
+from app.parsing_process.portal_tp_messages_archive import \
+    portal_tp_messages_archive
+from app.parsing_process.portal_tp_messages_details import \
+    portal_tp_messages_details
 from app.parsing_process.rosseti_mr_claims import rosseti_mr_claims
 from app.parsing_process.rosseti_mr_messages import rosseti_mr_messages
-
+from app.parsing_process.rzd_claims import rzd_claims
+from app.parsing_process.sk_tatarstan_claims import sk_tatarstan_claims
+from app.parsing_process.sk_tatarstan_claims_archive import \
+    sk_tatarstan_claims_archive
+from app.parsing_process.sk_tatarstan_messages import sk_tatarstan_messages
+from settings.config import (mosoblenergo_settings, oboronenergo_settings,
+                             portal_tp_settings, rosseti_mr_settings,
+                             rzd_settings, sk_tatarstan_settings)
 
 init(autoreset=True)
 
@@ -243,7 +231,7 @@ def run_parsing(
 
     [portal_tp(*params) for params in portal_tp_data if run_portal_tp]
 
-    # ******* Мособлэнерго (ночью код подтверждения приходит не всегда) *******
+    # ****************************** Мособлэнерго *****************************
     def mosoblenergo(
         instance_name: str,
         login: str,
@@ -264,8 +252,6 @@ def run_parsing(
             filter_by_last_days
         )
 
-        time.sleep(TIME_DELAY)
-
     mosoblenergo_data = [
         (
             'mosoblenergo_vr_top_1',
@@ -273,24 +259,26 @@ def run_parsing(
             mosoblenergo_settings.VR_TOP_USER_DECLARANT_ID,
             'VR_TOP_1'
         ),
-        (
-            'mosoblenergo_new_towers_mr_1',
-            mosoblenergo_settings.NEW_TOWERS_MR_USER_LOGIN_1,
-            mosoblenergo_settings.NEW_TOWERS_MR_USER_DECLARANT_ID,
-            'NEW_TOWERS_MR_1'
-        ),
+        # Пользователь не зарегестрирован
+        # (
+        #     'mosoblenergo_new_towers_mr_1',
+        #     mosoblenergo_settings.NEW_TOWERS_MR_USER_LOGIN_1,
+        #     mosoblenergo_settings.NEW_TOWERS_MR_USER_DECLARANT_ID,
+        #     'NEW_TOWERS_MR_1'
+        # ),
         (
             'mosoblenergo_pbk_1',
             mosoblenergo_settings.PBK_USER_LOGIN_1,
             mosoblenergo_settings.PBK_USER_DECLARANT_ID,
             'PBK_1'
         ),
-        (
-            'mosoblenergo_rb_1',
-            mosoblenergo_settings.RB_USER_LOGIN_1,
-            mosoblenergo_settings.RB_USER_DECLARANT_ID,
-            'RB_1'
-        ),
+        # Пользователь не зарегестрирован
+        # (
+        #     'mosoblenergo_rb_1',
+        #     mosoblenergo_settings.RB_USER_LOGIN_1,
+        #     mosoblenergo_settings.RB_USER_DECLARANT_ID,
+        #     'RB_1'
+        # ),
         (
             'mosoblenergo_nb_mr_pbk_rb_hardenergy_1',
             mosoblenergo_settings.NB_MR_PBK_RB_HARDENERGY_USER_LOGIN_1,
@@ -305,6 +293,7 @@ def run_parsing(
         ),
     ]
 
+    # Ночью код подтверждения приходит не всегда:
     [mosoblenergo(*params) for params in mosoblenergo_data if (
         run_mosoblenergo and DAY_START <= datetime.now() <= DAY_END
     )]
@@ -494,12 +483,12 @@ if __name__ == '__main__':
     try:
         run_parsing(
             filter_by_last_days=90,
-            run_oboronenergo=True,
-            run_rzd=True,
-            run_portal_tp=True,
+            run_oboronenergo=False,
+            run_rzd=False,
+            run_portal_tp=False,
             run_mosoblenergo=True,
-            run_sk_tatarstan=True,
-            run_rosseti_mr=True
+            run_sk_tatarstan=False,
+            run_rosseti_mr=False,
         )
     except KeyboardInterrupt:
         log_completion(start_time)

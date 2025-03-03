@@ -1,10 +1,9 @@
-import os
 import logging
+import os
 from datetime import datetime, timedelta
 from typing import Callable, Optional
 
 from colorama import Fore, Style, init
-
 
 init(autoreset=True)
 

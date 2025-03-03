@@ -1,75 +1,166 @@
-import pytz
-from typing import Optional
-
-import imaplib
 import email
-from email.header import decode_header
+import imaplib
+import re
 from datetime import datetime, timedelta
+from email.header import Header, decode_header
+from typing import Optional, Union
+
+import chardet
+import pytz
+from bs4 import BeautifulSoup
 
 
-def take_code_from_email(
-    email_login: str,
-    email_password: str,
-    email_server: str,
-    current_time: datetime,
-    users_emails: list[str],
-    users_emails_forward: Optional[list[str]] = None
+class Email:
 
-) -> Optional[int]:
-    """Получаем код подтверждения из входящих писем."""
-    confirmation_code = None
-    timer: int = 120  # Кол-во сек. в теч. скольки должен прийти код.
-    start_time: datetime = datetime.now()
-    today: str = datetime.now().strftime("%d-%b-%Y")
+    def __init__(
+        self,
+        email_login: str,
+        email_pswd: str,
+        email_server: str,
+        email_to: Optional[str] = None,
+        time_seconds_wait: Optional[int] = 120,
+    ):
 
-    while True:
-        if confirmation_code:
-            break
+        self.email_login = email_login
+        self.email_pswd = email_pswd
+        self.email_server = email_server
+        self.email_to = email_to
+        self.time_seconds_wait = time_seconds_wait
 
-        if datetime.now() - start_time > timedelta(seconds=timer):
-            break
+    def fetch_unread_emails(self) -> Optional[list[dict[str, str]]]:
+        with imaplib.IMAP4_SSL(self.email_server) as mail:
+            mail.login(self.email_login, self.email_pswd)
 
-        with imaplib.IMAP4_SSL(email_server) as mail:
-            mail.login(email_login, email_password)
-            mail.select('inbox')
+            mail.select(readonly=False)
+            status, messages = mail.search(None, '(UNSEEN)')
+            if status != 'OK' or not messages[0]:
+                return
 
-            tz = pytz.timezone('Europe/Moscow')
-            now = current_time.astimezone(tz)
-            time_threshold = now - timedelta(seconds=timer)
+            email_ids: list[bytes] = messages[0].split()
+            if not email_ids:
+                return
 
-            for user in users_emails:
-                search_query = f'FROM "{user}" SINCE "{today}"'
-                status, messages = mail.search(None, search_query)
+            email_data = []
+            for email_id in email_ids:
+                status, msg_data = mail.fetch(email_id, '(RFC822)')
+                msg = email.message_from_bytes(msg_data[0][1])
+                subject, encoding = decode_header(msg['Subject'])[0]
 
-                email_ids = messages[0].split()
+                email_subject: str = self._valid_subject_from_bytes(
+                    subject, encoding
+                )
+                email_to: str = self._valid_email_from(msg['To'])
+                email_date: datetime = datetime.strptime(
+                    msg.get('Date'), '%a, %d %b %Y %H:%M:%S %z'
+                )
+                email_body = ''
 
-                for num in email_ids:
-                    status, msg_data = mail.fetch(num, '(RFC822)')
-                    raw_email = msg_data[0][1]
-                    msg = email.message_from_bytes(raw_email)
+                if msg.is_multipart():
+                    for sub_index, part in enumerate(msg.walk()):
+                        content_type = part.get_content_type()
+                        content_disposition = str(
+                            part.get('Content-Disposition')
+                        )
 
-                    date_str = msg['date']
-                    date_time = email.utils.parsedate_to_datetime(date_str)
-
-                    if date_time >= time_threshold:
-                        if users_emails_forward:
-                            subject, encoding = decode_header(
-                                msg['subject']
-                            )[0] if user not in users_emails_forward else (
-                                decode_header(msg['subject'])[1]
+                        if content_type == (
+                            'text/plain'
+                        ) and 'attachment' not in content_disposition:
+                            payload = part.get_payload(decode=True)
+                            email_body = self._valid_text_from_bytes(
+                                payload
                             )
-                        else:
-                            subject, encoding = decode_header(
-                                msg['subject']
-                            )[0]
+                else:
+                    html_body_text = msg.get_payload(decode=True).decode()
+                    email_body = self._valid_text_from_html(html_body_text)
 
-                        if isinstance(subject, bytes):
-                            subject = subject.decode(encoding or 'utf-8')
+                email_data.append(
+                    {
+                        'email_to': email_to,
+                        'email_date': email_date,
+                        'email_subject': email_subject,
+                        'email_body': email_body,
+                    }
+                )
+            return email_data
 
-                        if 'Ваш код для авторизации' in subject:
-                            confirmation_code = subject.split(
-                                'Ваш код для авторизации'
-                            )[1].strip()
-                            return confirmation_code
+    def take_code_from_email(self) -> Optional[str]:
+        timezone = pytz.timezone('Europe/Moscow')
+        start_time = datetime.now(timezone)
+        time_limit_start = start_time - timedelta(
+            seconds=self.time_seconds_wait
+        )
+        time_limit_end = start_time + timedelta(seconds=self.time_seconds_wait)
 
-    return confirmation_code
+        while True:
+            timer_limit = (datetime.now(timezone) - start_time).total_seconds()
+            if timer_limit > self.time_seconds_wait:
+                return
+
+            new_emails = self.fetch_unread_emails()
+            if not new_emails:
+                continue
+
+            sorted_emails = sorted(
+                new_emails, key=lambda x: x['email_date'], reverse=True
+            )
+
+            for new_email in sorted_emails:
+                if self.email_to and new_email[
+                    'email_to'
+                ] != self.email_to:
+                    continue
+
+                if not time_limit_start <= new_email[
+                    'email_date'
+                ] <= time_limit_end:
+                    continue
+
+                email_body = new_email['email_body'].lower().strip()
+                if 'ваш код для авторизации' in email_body:
+                    match = re.search(
+                        r'ваш код для авторизации (\d+)', email_body
+                    )
+                    authorization_code = match.group(1)
+                    return authorization_code.strip()
+
+    def _valid_email_from(self, email_from_original: Header) -> str:
+        email_from_parser: str = email.utils.parseaddr(email_from_original)[-1]
+        email_from = email_from_parser if email_from_parser else (
+            str(email_from_original)
+            .split()[-1]
+            .replace('<', '')
+            .replace('>', '')
+        )
+        return email_from
+
+    def _valid_subject_from_bytes(
+        self, subject: Union[bytes, str], encoding: str
+    ) -> str:
+        if isinstance(subject, bytes):
+            try:
+                email_subject = subject.decode(
+                    encoding or 'utf-8', errors='replace'
+                )
+            except LookupError:
+                email_subject = subject.decode('utf-8', errors='replace')
+            return email_subject
+        return subject
+
+    def _valid_text_from_html(self, html_body_text: str) -> str:
+        soup = BeautifulSoup(html_body_text, 'lxml')
+        body_text = soup.get_text()
+        cleaned_body_text = (
+            ' '.join(body_text.replace('\n', ' ').replace('\r', ' ').split())
+        )
+        return cleaned_body_text
+
+    def _valid_text_from_bytes(self, byte_body_text: bytes) -> str:
+        result = chardet.detect(byte_body_text)
+        encoding = result['encoding']
+        body_text = byte_body_text.decode(
+            encoding or 'utf-8', errors='replace'
+        )
+        cleaned_body_text = (
+            ' '.join(body_text.replace('\n', ' ').replace('\r', ' ').split())
+        )
+        return cleaned_body_text

@@ -1,24 +1,21 @@
 import os
 import sys
 import time
-import pytz
-from datetime import datetime, date
-from typing import Optional
+from datetime import date, datetime
 
 from pandas import DataFrame
 from selenium import webdriver
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
-from selenium.common.exceptions import NoSuchElementException, TimeoutException
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
 
 CURRENT_DIR: str = os.path.dirname(__file__)
 sys.path.append(os.path.join(CURRENT_DIR, '..', '..'))
+from app.common.take_code_from_email import Email  # noqa: E402
 from app.models.parsing_model import CLAIMS_COLUMNS  # noqa: E402
 from settings.config import bot_email_settings  # noqa: E402
-from app.common.take_code_from_email import take_code_from_email  # noqa: E402
-
 
 PARSING_DELAY: int = 5
 PARSING_TIMER: int = 120
@@ -91,14 +88,13 @@ def mosoblenergo_claims(login: str, *args) -> DataFrame:
     time.sleep(2)
     element.send_keys(Keys.ENTER)
 
-    confirmation_code = take_code_from_email(
+    instance_email = Email(
         bot_email_settings.BOT_EMAIL_LOGIN_1,
         bot_email_settings.BOT_EMAIL_PSWD_1,
         bot_email_settings.EMAIL_SERVER,
-        datetime.now(pytz.timezone('Europe/Moscow')),
-        USERS_EMAILS,
-        ['y.martynova@newtowers.ru']
+        login
     )
+    confirmation_code = instance_email.take_code_from_email()
     if not confirmation_code:
         raise ValueError('Error receiving verification code.')
     element = wait.until(

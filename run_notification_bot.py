@@ -1,14 +1,13 @@
 import asyncio
 from datetime import datetime
 
-from aiogram.client.bot import DefaultBotProperties
 from aiogram import Bot, Dispatcher
+from aiogram.client.bot import DefaultBotProperties
 from aiogram.enums import ParseMode
 from colorama import Fore, Style, init
 
-from settings.config import bot_telegram_settings
 from app.telegram.routes.notification_route import notification_route
-
+from settings.config import bot_telegram_settings
 
 init(autoreset=True)
 

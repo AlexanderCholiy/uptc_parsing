@@ -1,21 +1,19 @@
 import os
 import sys
-from datetime import datetime, date
+from datetime import date, datetime
 
 from pandas import DataFrame
 from selenium import webdriver
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import (
-    TimeoutException, StaleElementReferenceException
-)
+from selenium.common.exceptions import (StaleElementReferenceException,
+                                        TimeoutException)
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
 
 CURRENT_DIR: str = os.path.dirname(__file__)
 sys.path.append(os.path.join(CURRENT_DIR, '..', '..'))
-from app.models.parsing_model import CLAIMS_COLUMNS  # noqa: E402
 from app.common.authorize_form import authorize_form  # noqa: E402
-
+from app.models.parsing_model import CLAIMS_COLUMNS  # noqa: E402
 
 PARSING_DELAY: int = 5
 PARSING_TIMER: int = 120

@@ -1,8 +1,9 @@
-import sys
-import time
-import schedule
 import subprocess
+import sys
 import threading
+import time
+
+import schedule
 
 
 def run_script(script_name):

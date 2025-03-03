@@ -1,9 +1,8 @@
-import os
 import logging
-from typing import Optional, Callable
+import os
+from typing import Callable, Optional
 
 from colorama import Fore, Style, init
-
 
 init(autoreset=True)
 
