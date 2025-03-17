@@ -76,11 +76,18 @@ def mosoblenergo_claims(login: str, *args) -> DataFrame:
     driver.maximize_window()
     wait = WebDriverWait(driver, PARSING_TIMER)
 
-    wait.until(EC.element_to_be_clickable((By.XPATH, BUTTON_CONSULTANT_CLOSE)))
-    element = wait.until(
-        EC.presence_of_element_located((By.XPATH, BUTTON_CONSULTANT_CLOSE))
+    # wait.until(EC.element_to_be_clickable((By.XPATH, BUTTON_CONSULTANT_CLOSE)))
+    # element = wait.until(
+    #     EC.presence_of_element_located((By.XPATH, BUTTON_CONSULTANT_CLOSE))
+    # )
+    # element.click()
+    instance_email = Email(
+        bot_email_settings.BOT_EMAIL_LOGIN_1,
+        bot_email_settings.BOT_EMAIL_PSWD_1,
+        bot_email_settings.EMAIL_SERVER,
     )
-    element.click()
+    instance_email.fetch_unread_emails()
+
     element = wait.until(
         EC.presence_of_element_located((By.XPATH, BUTTON_LOGIN))
     )
@@ -88,11 +95,6 @@ def mosoblenergo_claims(login: str, *args) -> DataFrame:
     time.sleep(2)
     element.send_keys(Keys.ENTER)
 
-    instance_email = Email(
-        bot_email_settings.BOT_EMAIL_LOGIN_1,
-        bot_email_settings.BOT_EMAIL_PSWD_1,
-        bot_email_settings.EMAIL_SERVER,
-    )
     confirmation_code = instance_email.take_code_from_email()
     if not confirmation_code:
         raise ValueError('Error receiving verification code.')

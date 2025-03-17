@@ -42,12 +42,12 @@ TIME_DELAY: int = 120
 def run_parsing(
     save_df: bool = True,
     filter_by_last_days: Optional[int] = None,
-    run_oboronenergo: bool = True,
-    run_rzd: bool = True,
-    run_portal_tp: bool = True,
-    run_mosoblenergo: bool = True,
-    run_sk_tatarstan: bool = True,
-    run_rosseti_mr: bool = True
+    run_oboronenergo: bool = False,
+    run_rzd: bool = False,
+    run_portal_tp: bool = False,
+    run_mosoblenergo: bool = False,
+    run_sk_tatarstan: bool = False,
+    run_rosseti_mr: bool = False
 ):
     """
     Parametrs:
