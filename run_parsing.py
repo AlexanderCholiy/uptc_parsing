@@ -8,21 +8,26 @@ from app.parsing_process.mosoblenergo_claims import mosoblenergo_claims
 from app.parsing_process.oboronenergo_claims import oboronenergo_claims
 from app.parsing_process.oboronenergo_messages import oboronenergo_messages
 from app.parsing_process.portal_tp_claims import portal_tp_claims
-from app.parsing_process.portal_tp_claims_archive import \
+from app.parsing_process.portal_tp_claims_archive import (
     portal_tp_claims_archive
-from app.parsing_process.portal_tp_claims_details import \
+)
+from app.parsing_process.portal_tp_claims_details import (
     portal_tp_claims_details
+)
 from app.parsing_process.portal_tp_messages import portal_tp_messages
-from app.parsing_process.portal_tp_messages_archive import \
+from app.parsing_process.portal_tp_messages_archive import (
     portal_tp_messages_archive
-from app.parsing_process.portal_tp_messages_details import \
+)
+from app.parsing_process.portal_tp_messages_details import (
     portal_tp_messages_details
+)
 from app.parsing_process.rosseti_mr_claims import rosseti_mr_claims
 from app.parsing_process.rosseti_mr_messages import rosseti_mr_messages
 from app.parsing_process.rzd_claims import rzd_claims
 from app.parsing_process.sk_tatarstan_claims import sk_tatarstan_claims
-from app.parsing_process.sk_tatarstan_claims_archive import \
+from app.parsing_process.sk_tatarstan_claims_archive import (
     sk_tatarstan_claims_archive
+)
 from app.parsing_process.sk_tatarstan_messages import sk_tatarstan_messages
 from settings.config import (mosoblenergo_settings, oboronenergo_settings,
                              portal_tp_settings, rosseti_mr_settings,
@@ -226,7 +231,7 @@ def run_parsing(
             portal_tp_settings.PBK_SIB_USER_PSWD_1,
             portal_tp_settings.PBK_SIB_USER_DECLARANT_ID,
             'PBK_SIB_1'
-        )
+        ),
     ]
 
     [portal_tp(*params) for params in portal_tp_data if run_portal_tp]
@@ -476,7 +481,7 @@ def log_completion(start_time: datetime):
 
 if __name__ == '__main__':
     start_time = datetime.now()
-    print(Fore.MAGENTA + Style.BRIGHT + f'Запуск {__file__}')
+    print(Fore.MAGENTA + Style.BRIGHT + f'Запуск {__file__} ({start_time})')
     is_keyboard_interrupt: bool = False
     try:
         run_parsing(
