@@ -485,7 +485,7 @@ if __name__ == '__main__':
     is_keyboard_interrupt: bool = False
     try:
         run_parsing(
-            filter_by_last_days=90,
+            filter_by_last_days=365,
             run_oboronenergo=True,
             run_rzd=True,
             run_portal_tp=True,

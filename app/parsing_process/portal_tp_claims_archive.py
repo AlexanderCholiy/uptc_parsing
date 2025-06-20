@@ -16,7 +16,7 @@ from app.common.scroll_down import scroll_down  # noqa: E402
 from app.models.parsing_model import CLAIMS_COLUMNS  # noqa: E402
 
 PARSING_DELAY: int = 5
-PARSING_TIMER: int = 120
+PARSING_TIMER: int = 30
 MONTHS: dict = {
     'января': 1,
     'февраля': 2,
@@ -60,10 +60,7 @@ def portal_tp_claims_archive(login: str, password: str, *args) -> DataFrame:
         EC.element_to_be_clickable(
             (
                 By.XPATH,
-                "//li[@class='ui-tabs-header ui-state-default ui-corner-top'" +
-                " and @role='tab' and @aria-expanded='false'" +
-                " and @aria-selected='false' and @data-index='1'" +
-                " and contains(., 'Архив')]/a"
+                "//li[contains(@class, 'ui-tabs-header') and contains(., 'Архив')]/a"
             )
         )
     ).click()
