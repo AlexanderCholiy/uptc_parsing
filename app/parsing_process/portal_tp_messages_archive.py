@@ -8,6 +8,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
+from app.common.logger import portal_tp_logger
 
 CURRENT_DIR: str = os.path.dirname(__file__)
 sys.path.append(os.path.join(CURRENT_DIR, '..', '..'))
@@ -43,6 +44,9 @@ def portal_tp_messages_archive(login: str, password: str, *args) -> DataFrame:
     )
     driver.maximize_window()
     wait = WebDriverWait(driver, PARSING_TIMER)
+
+    portal_tp_logger.debug('Запуск сбора архивных обращений')
+
     authorize_form(
         wait, login, password,
         "//input[@id='workplaceTopForm:j_mail_login']",
@@ -50,11 +54,21 @@ def portal_tp_messages_archive(login: str, password: str, *args) -> DataFrame:
         "//button[@id='workplaceTopForm:loginBtn']"
     )
 
+    portal_tp_logger.debug('Прошли авторизацию')
+
     wait.until(
         EC.element_to_be_clickable(
-            (By.XPATH, "//li[@role='tab' and @data-index='2']")
+            (
+                By.XPATH,
+                (
+                    "//li[@role='tab' and @data-index='2']"
+                    "/a[normalize-space()='Обращения']"
+                )
+            )
         )
     ).click()
+
+    portal_tp_logger.debug('Попали на страницу со списком обращений')
 
     wait.until(
         EC.element_to_be_clickable(
@@ -67,6 +81,8 @@ def portal_tp_messages_archive(login: str, password: str, *args) -> DataFrame:
             )
         )
     ).click()
+
+    portal_tp_logger.debug('Перешли на страницу архивных обращений')
 
     messages_ids = set()
 
@@ -84,6 +100,8 @@ def portal_tp_messages_archive(login: str, password: str, *args) -> DataFrame:
 
     scroll_down(driver)
 
+    scroll_number = 1
+
     while True:
         count_messages_ids = len(messages_ids)
         messages_links = messages_elements(
@@ -92,21 +110,34 @@ def portal_tp_messages_archive(login: str, password: str, *args) -> DataFrame:
             "//a[@class='ui-link ui-widget " +
             "listEvent__item-message__details']"
         )
+        portal_tp_logger.debug(f'Получили список ссылок ({scroll_number})')
+
         messages_statuses = messages_elements(
             BASE_SELECTOR +
             "//div[contains(@class, 'listEvent__item-status')]"
         )
+        portal_tp_logger.debug(f'Получили список статусов ({scroll_number})')
+
         messages_subjects = messages_elements(
             BASE_SELECTOR +
             "//div[contains(@class, 'listEvent__item-nameEntity')]"
         )
+        portal_tp_logger.debug(f'Получили список названий ({scroll_number})')
+
         messages_numbers = messages_elements(
             BASE_SELECTOR +
             "//div[contains(@class, 'listEvent__item-number')]"
         )
+        portal_tp_logger.debug(
+            f'Получили список номеров обращений ({scroll_number})'
+        )
+
         messages_dates = messages_elements(
             BASE_SELECTOR +
             "//div[contains(@class, 'listEvent__item-date')]"
+        )
+        portal_tp_logger.debug(
+            f'Получили список дат обращений ({scroll_number})'
         )
 
         for message_index in range(len(messages_links)):
@@ -159,6 +190,10 @@ def portal_tp_messages_archive(login: str, password: str, *args) -> DataFrame:
         ) and not check_end_page:
             break
 
+    portal_tp_logger.info(f'Найдено {len(MESSAGES)} обращений.')
+
     driver.quit()
+
+    portal_tp_logger.debug('Вышли из браузер')
 
     return MESSAGES

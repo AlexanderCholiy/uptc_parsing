@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Optional
 
 from app.common.logger import app_logger
@@ -44,7 +44,7 @@ DAY_END: datetime = (
 TIME_DELAY: int = 120
 
 
-@run_with_lock(PARSING_LOCK_FILE, app_logger)
+@run_with_lock(PARSING_LOCK_FILE, app_logger, timedelta(days=1))
 def run_parsing(
     save_df: bool = True,
     filter_by_last_days: Optional[int] = None,
@@ -172,10 +172,10 @@ def run_parsing(
             declarant_id,
             declarant_name
         )
-        instance.write_claims_data_to_db(
-            instance.parsing(portal_tp_claims, save_df),
-            filter_by_last_days
-        )
+        # instance.write_claims_data_to_db(
+        #     instance.parsing(portal_tp_claims, save_df),
+        #     filter_by_last_days
+        # )
         # instance.write_claims_data_to_db(
         #     instance.parsing(portal_tp_claims_archive, save_df),
         #     filter_by_last_days
@@ -188,10 +188,10 @@ def run_parsing(
         #     instance.parsing(portal_tp_messages, save_df),
         #     filter_by_last_days
         # )
-        # instance.write_messages_data_to_db(
-        #     instance.parsing(portal_tp_messages_archive, save_df),
-        #     filter_by_last_days
-        # )
+        instance.write_messages_data_to_db(
+            instance.parsing(portal_tp_messages_archive, save_df),
+            filter_by_last_days
+        )
         # instance.write_messages_data_to_db(
         #     instance.parsing(portal_tp_messages_details, save_df),
         #     None, True

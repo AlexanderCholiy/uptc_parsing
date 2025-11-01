@@ -61,7 +61,9 @@ def run_with_lock(
             finally:
                 if lock_acquired and os.path.exists(lock_file):
                     os.remove(lock_file)
-                    logger.info(f'Lock-файл удалён после выполнения: {lock_file}')
+                    logger.info(
+                        f'Lock-файл удалён после выполнения: {lock_file}'
+                    )
 
         return wrapper
 
