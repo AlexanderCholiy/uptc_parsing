@@ -172,30 +172,30 @@ def run_parsing(
             declarant_id,
             declarant_name
         )
-        # instance.write_claims_data_to_db(
-        #     instance.parsing(portal_tp_claims, save_df),
-        #     filter_by_last_days
-        # )
-        # instance.write_claims_data_to_db(
-        #     instance.parsing(portal_tp_claims_archive, save_df),
-        #     filter_by_last_days
-        # )
-        # instance.write_claims_data_to_db(
-        #     instance.parsing(portal_tp_claims_details, save_df),
-        #     None, True
-        # )
-        # instance.write_messages_data_to_db(
-        #     instance.parsing(portal_tp_messages, save_df),
-        #     filter_by_last_days
-        # )
+        instance.write_claims_data_to_db(
+            instance.parsing(portal_tp_claims, save_df),
+            filter_by_last_days
+        )
+        instance.write_claims_data_to_db(
+            instance.parsing(portal_tp_claims_archive, save_df),
+            filter_by_last_days
+        )
+        instance.write_claims_data_to_db(
+            instance.parsing(portal_tp_claims_details, save_df),
+            None, True
+        )
+        instance.write_messages_data_to_db(
+            instance.parsing(portal_tp_messages, save_df),
+            filter_by_last_days
+        )
         instance.write_messages_data_to_db(
             instance.parsing(portal_tp_messages_archive, save_df),
             filter_by_last_days
         )
-        # instance.write_messages_data_to_db(
-        #     instance.parsing(portal_tp_messages_details, save_df),
-        #     None, True
-        # )
+        instance.write_messages_data_to_db(
+            instance.parsing(portal_tp_messages_details, save_df),
+            None, True
+        )
 
     portal_tp_data = [
         (
@@ -479,12 +479,12 @@ if __name__ == '__main__':
     try:
         run_parsing(
             filter_by_last_days=365,
-            # run_oboronenergo=True,
-            # run_rzd=True,
+            run_oboronenergo=True,
+            run_rzd=True,
             run_portal_tp=True,
-            # run_mosoblenergo=True,
-            # run_sk_tatarstan=True,
-            # run_rosseti_mr=True,
+            run_mosoblenergo=True,
+            run_sk_tatarstan=True,
+            run_rosseti_mr=True,
         )
     finally:
         delta_time = round((datetime.now() - start_time).total_seconds())
