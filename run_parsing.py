@@ -1,7 +1,9 @@
 from datetime import datetime
 from typing import Optional
 
-from colorama import Fore, Style, init
+from app.common.logger import app_logger
+from app.common.constants import PARSING_LOCK_FILE
+from app.common.check_lock import run_with_lock
 
 from app.models.parsing_model import PARSING
 from app.parsing_process.mosoblenergo_claims import mosoblenergo_claims
@@ -33,8 +35,6 @@ from settings.config import (mosoblenergo_settings, oboronenergo_settings,
                              portal_tp_settings, rosseti_mr_settings,
                              rzd_settings, sk_tatarstan_settings)
 
-init(autoreset=True)
-
 DAY_START: datetime = (
     datetime.now().replace(hour=8, minute=0, second=0, microsecond=0)
 )
@@ -44,6 +44,7 @@ DAY_END: datetime = (
 TIME_DELAY: int = 120
 
 
+@run_with_lock(PARSING_LOCK_FILE, app_logger)
 def run_parsing(
     save_df: bool = True,
     filter_by_last_days: Optional[int] = None,
@@ -175,26 +176,26 @@ def run_parsing(
             instance.parsing(portal_tp_claims, save_df),
             filter_by_last_days
         )
-        instance.write_claims_data_to_db(
-            instance.parsing(portal_tp_claims_archive, save_df),
-            filter_by_last_days
-        )
-        instance.write_claims_data_to_db(
-            instance.parsing(portal_tp_claims_details, save_df),
-            None, True
-        )
-        instance.write_messages_data_to_db(
-            instance.parsing(portal_tp_messages, save_df),
-            filter_by_last_days
-        )
-        instance.write_messages_data_to_db(
-            instance.parsing(portal_tp_messages_archive, save_df),
-            filter_by_last_days
-        )
-        instance.write_messages_data_to_db(
-            instance.parsing(portal_tp_messages_details, save_df),
-            None, True
-        )
+        # instance.write_claims_data_to_db(
+        #     instance.parsing(portal_tp_claims_archive, save_df),
+        #     filter_by_last_days
+        # )
+        # instance.write_claims_data_to_db(
+        #     instance.parsing(portal_tp_claims_details, save_df),
+        #     None, True
+        # )
+        # instance.write_messages_data_to_db(
+        #     instance.parsing(portal_tp_messages, save_df),
+        #     filter_by_last_days
+        # )
+        # instance.write_messages_data_to_db(
+        #     instance.parsing(portal_tp_messages_archive, save_df),
+        #     filter_by_last_days
+        # )
+        # instance.write_messages_data_to_db(
+        #     instance.parsing(portal_tp_messages_details, save_df),
+        #     None, True
+        # )
 
     portal_tp_data = [
         (
@@ -471,31 +472,20 @@ def run_parsing(
     [rosseti_mr(*params) for params in rosseti_mr_data if run_rosseti_mr]
 
 
-def log_completion(start_time: datetime):
-    delta_time = round((datetime.now() - start_time).total_seconds())
-    print(
-        Fore.MAGENTA + Style.BRIGHT +
-        f'Завершение {__file__} (Δt: {delta_time}c).'
-    )
-
-
 if __name__ == '__main__':
     start_time = datetime.now()
-    print(Fore.MAGENTA + Style.BRIGHT + f'Запуск {__file__} ({start_time})')
+    app_logger.info(f'Запуск {__file__} ({start_time})')
     is_keyboard_interrupt: bool = False
     try:
         run_parsing(
             filter_by_last_days=365,
-            run_oboronenergo=True,
-            run_rzd=True,
+            # run_oboronenergo=True,
+            # run_rzd=True,
             run_portal_tp=True,
-            run_mosoblenergo=True,
-            run_sk_tatarstan=True,
-            run_rosseti_mr=True,
+            # run_mosoblenergo=True,
+            # run_sk_tatarstan=True,
+            # run_rosseti_mr=True,
         )
-    except KeyboardInterrupt:
-        log_completion(start_time)
-        is_keyboard_interrupt = True
     finally:
-        if not is_keyboard_interrupt:
-            log_completion(start_time)
+        delta_time = round((datetime.now() - start_time).total_seconds())
+        app_logger.info(f'Завершение {__file__} (Δt: {delta_time}c).')

@@ -8,12 +8,14 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
+from app.common.logger import portal_tp_logger
 
 CURRENT_DIR: str = os.path.dirname(__file__)
 sys.path.append(os.path.join(CURRENT_DIR, '..', '..'))
 from app.common.authorize_form import authorize_form  # noqa: E402
 from app.common.scroll_down import scroll_down  # noqa: E402
 from app.models.parsing_model import CLAIMS_COLUMNS  # noqa: E402
+
 
 PARSING_DELAY: int = 5
 PARSING_TIMER: int = 120
@@ -43,6 +45,9 @@ def portal_tp_claims(login: str, password: str, *args) -> DataFrame:
     )
     driver.maximize_window()
     wait = WebDriverWait(driver, PARSING_TIMER)
+
+    portal_tp_logger.debug('Запуск сбора заявок')
+
     authorize_form(
         wait, login, password,
         "//input[@id='workplaceTopForm:j_mail_login']",
@@ -50,11 +55,21 @@ def portal_tp_claims(login: str, password: str, *args) -> DataFrame:
         "//button[@id='workplaceTopForm:loginBtn']"
     )
 
+    portal_tp_logger.debug('Прошли авторизацию')
+
     wait.until(
         EC.element_to_be_clickable(
-            (By.XPATH, "//li[@role='tab' and @data-index='1']")
+            (
+                By.XPATH,
+                (
+                    "//li[@role='tab' and @data-index='1']"
+                    "/a[normalize-space()='Заявки']"
+                )
+            )
         )
     ).click()
+
+    portal_tp_logger.debug('Попали на страницу со списком заявок')
 
     claims_ids = set()
 
@@ -72,25 +87,41 @@ def portal_tp_claims(login: str, password: str, *args) -> DataFrame:
 
     scroll_down(driver)
 
+    scroll_number = 1
+
     while True:
         count_claims_ids = len(claims_ids)
+
         claims_links = claims_elements(
             BASE_SELECTOR +
             "//div[@class='listEvent__item-right-section']" +
             "//a[@class='ui-link ui-widget " +
             "listEvent__item-message__details']"
         )
+        portal_tp_logger.debug(f'Получили список ссылок ({scroll_number})')
+
         claims_statuses = claims_elements(
             BASE_SELECTOR +
             "//div[contains(@class, 'listEvent__item-status')]"
         )
+        portal_tp_logger.debug(
+            f'Получили список статусов ({scroll_number})'
+        )
+
         claims_numbers = claims_elements(
             BASE_SELECTOR +
             "//div[contains(@class, 'listEvent__item-number')]"
         )
+        portal_tp_logger.debug(
+            f'Получили список номеров заявок ({scroll_number})'
+        )
+
         claims_dates = claims_elements(
             BASE_SELECTOR +
             "//div[contains(@class, 'listEvent__item-date')]"
+        )
+        portal_tp_logger.debug(
+            f'Получили список дат заявок ({scroll_number})'
         )
 
         for claim_index in range(len(claims_links)):
@@ -133,7 +164,13 @@ def portal_tp_claims(login: str, password: str, *args) -> DataFrame:
             len(CLAIMS) == 0 or len(claims_ids) == count_claims_ids
         ) and not check_end_page:
             break
+        else:
+            scroll_number += 1
+
+    portal_tp_logger.info(f'Найдено {len(CLAIMS)} заявок.')
 
     driver.quit()
+
+    portal_tp_logger.debug('Вышли из браузер')
 
     return CLAIMS

@@ -7,6 +7,9 @@ ENV_PATH: str = os.path.join(CURRENT_DIR, '.env')
 load_dotenv(ENV_PATH)
 
 
+DEBUG_MODE = os.getenv('DEBUG', 'True') == 'True'
+
+
 class DB_SETTINGS:
     """Параметры подключения к БД."""
     DB_HOST: str = os.getenv('DB_HOST')
