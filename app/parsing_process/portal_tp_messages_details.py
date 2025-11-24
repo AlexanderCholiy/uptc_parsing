@@ -20,7 +20,7 @@ from database.requests.select_messages_details_urls import \
     select_messages_details_urls  # noqa: E402
 
 init(autoreset=True)
-PARSING_DELAY: int = 3
+PARSING_DELAY: int = 5
 PARSING_TIMER: int = 30
 
 
