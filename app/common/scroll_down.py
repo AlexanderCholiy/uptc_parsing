@@ -5,7 +5,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 
 
-def scroll_down(driver: webdriver.Chrome, delay: int = 5) -> bool:
+def scroll_down(driver: webdriver.Chrome, delay: int = 10) -> bool:
     """
     Прокручивает страницу вниз.
 

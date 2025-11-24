@@ -16,8 +16,7 @@ from app.common.authorize_form import authorize_form  # noqa: E402
 from app.common.scroll_down import scroll_down  # noqa: E402
 from app.models.parsing_model import MESSAGES_COLUMNS  # noqa: E402
 
-PARSING_DELAY: int = 5
-PARSING_TIMER: int = 120
+PARSING_TIMER: int = 180
 MONTHS: dict = {
     'января': 1,
     'февраля': 2,
