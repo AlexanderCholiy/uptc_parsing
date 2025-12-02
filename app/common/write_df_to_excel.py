@@ -8,6 +8,8 @@ def write_df_to_excel(
     file_path: str, df: pd.DataFrame, sheet_name: str = 'list_1'
 ):
     """Запись DataFrame в Excel файл."""
+    file_path = os.path.normpath(file_path)
+
     try:
         if os.path.exists(file_path):
             with pd.ExcelWriter(

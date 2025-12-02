@@ -1,8 +1,8 @@
+import functools
 import os
 from datetime import datetime, timedelta
-from typing import Callable
-import functools
 from logging import Logger
+from typing import Callable
 
 
 def run_with_lock(

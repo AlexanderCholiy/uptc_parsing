@@ -14,8 +14,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 CURRENT_DIR: str = os.path.dirname(__file__)
 sys.path.append(os.path.join(CURRENT_DIR, '..', '..'))
 from app.common.authorize_form import authorize_form  # noqa: E402
-from app.models.parsing_model import CLAIMS_COLUMNS  # noqa: E402
 from app.common.logger import rosseti_mr_logger
+from app.models.parsing_model import CLAIMS_COLUMNS  # noqa: E402
 
 PARSING_DELAY: int = 5
 PARSING_TIMER: int = 120
@@ -45,6 +45,20 @@ def rosseti_mr_claims(login: str, password: str, *args) -> DataFrame:
         ) == 'complete'
     )
 
+    rosseti_mr_logger.debug('Дождались загрузки страницы')
+
+    bot_btn = wait.until(
+        EC.element_to_be_clickable((By.ID, "close-iframe-bot"))
+    )
+    bot_btn.click()
+    rosseti_mr_logger.debug('Закрыли бота')
+
+    cookie_btn = wait.until(
+        EC.element_to_be_clickable((By.ID, "cookie-dismiss"))
+    )
+    cookie_btn.click()
+    rosseti_mr_logger.debug('Приняли cookie')
+
     def take_data_from_page() -> date:
         wait.until(
             lambda browser: browser.execute_script(
@@ -69,15 +83,20 @@ def rosseti_mr_claims(login: str, password: str, *args) -> DataFrame:
             try:
                 cells = row.find_elements(By.XPATH, ".//td")
                 parsing_data = datetime.now()
+
                 claim_number: str = cells[4].text.strip()
+
                 claim_status = cells[3].text.strip()
                 claim_link = (
                     f'https://lk.rossetimr.ru/{row.get_attribute("href")}'
                 )
-                claim_date: str = cells[1].text.strip()
-                claim_date: date = (
-                    datetime.strptime(claim_date, '%d.%m.%Y').date()
+
+                raw_date = cells[1].text.strip()
+                raw_date = (
+                    raw_date.replace('\n', '').replace(' ', '').rstrip('.')
                 )
+                claim_date = datetime.strptime(raw_date, '%d.%m.%Y').date()
+
                 claim_address: str = cells[7].text.split('\n')[0].strip()
                 claim_inner_number: str = (
                     claim_link.split('?page')[0].split('claims/')[1].strip()
@@ -112,8 +131,10 @@ def rosseti_mr_claims(login: str, password: str, *args) -> DataFrame:
     ):
         rosseti_mr_logger.info(f'Найдено {len(CLAIMS)} заявок.')
         driver.quit()
-        rosseti_mr_logger.debug('Вышли из браузер')
+        rosseti_mr_logger.debug('Вышли из браузера')
         return CLAIMS
+
+    page_number = 1
 
     try:
         WebDriverWait(driver, PARSING_DELAY).until(
@@ -121,14 +142,18 @@ def rosseti_mr_claims(login: str, password: str, *args) -> DataFrame:
                 (By.XPATH, "//a[contains(@class, 'custom-combobox-toggle')]")
             )
         ).click()
+        rosseti_mr_logger.debug('Нажали на выбор кол-ва элементов на странице')
         WebDriverWait(driver, PARSING_DELAY).until(
             EC.presence_of_element_located(
                 (By.XPATH, "//li[contains(text(), '100')]")
             )
         ).click()
+        rosseti_mr_logger.debug('Выбрали 100 элементов на странице')
         last_page: bool = False
     except TimeoutException:
+        rosseti_mr_logger.debug(f'Стр. {page_number}')
         take_data_from_page()
+        page_number += 1
         last_page: bool = True
 
     while not last_page:
@@ -136,6 +161,9 @@ def rosseti_mr_claims(login: str, password: str, *args) -> DataFrame:
             # if take_data_from_page() < date.today() - timedelta(days=365):
             #     break
             take_data_from_page()
+            rosseti_mr_logger.debug(f'Стр. {page_number}')
+            page_number += 1
+
             WebDriverWait(driver, PARSING_DELAY).until(
                 EC.presence_of_element_located(
                     (
@@ -144,6 +172,7 @@ def rosseti_mr_claims(login: str, password: str, *args) -> DataFrame:
                     )
                 )
             ).click()
+            rosseti_mr_logger.debug('Переключились на следующую страницу')
 
         except TimeoutException:
             last_page = True
@@ -152,6 +181,6 @@ def rosseti_mr_claims(login: str, password: str, *args) -> DataFrame:
 
     driver.quit()
 
-    rosseti_mr_logger.debug('Вышли из браузер')
+    rosseti_mr_logger.debug('Вышли из браузера')
 
     return CLAIMS

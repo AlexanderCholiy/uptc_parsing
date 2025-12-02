@@ -1,14 +1,9 @@
 import logging
 from logging.handlers import RotatingFileHandler
 
-from .constants import (
-    DEFAULT_LOG_FILE,
-    DEFAULT_LOG_LEVEL,
-    DEFAULT_LOG_MODE,
-    DEFAULT_ROTATING_LOG_FILE,
-    PORTAL_TP_LOG_FILE,
-    ROSSETI_MR_LOG_FILE,
-)
+from .constants import (DEFAULT_LOG_FILE, DEFAULT_LOG_LEVEL, DEFAULT_LOG_MODE,
+                        DEFAULT_ROTATING_LOG_FILE, PORTAL_TP_LOG_FILE,
+                        ROSSETI_MR_LOG_FILE)
 from .exceptions import LoggerError
 
 

@@ -14,7 +14,9 @@ from selenium.webdriver.support.ui import WebDriverWait
 CURRENT_DIR: str = os.path.dirname(__file__)
 sys.path.append(os.path.join(CURRENT_DIR, '..', '..'))
 from app.common.authorize_form import authorize_form  # noqa: E402
+from app.common.logger import rosseti_mr_logger  # noqa: E402
 from app.models.parsing_model import MESSAGES_COLUMNS  # noqa: E402
+
 
 PARSING_DELAY: int = 5
 PARSING_TIMER: int = 120
@@ -29,6 +31,8 @@ def rosseti_mr_messages(login: str, password: str, *args) -> DataFrame:
     driver.maximize_window()
     wait = WebDriverWait(driver, PARSING_TIMER)
 
+    rosseti_mr_logger.debug('Запуск сбора обращений')
+
     authorize_form(
         wait, login, password,
         "//*[@id='user_email']",
@@ -36,11 +40,27 @@ def rosseti_mr_messages(login: str, password: str, *args) -> DataFrame:
         "//button[span[text()='Войти']]"
     )
 
+    rosseti_mr_logger.debug('Прошли авторизацию')
+
     wait.until(
         lambda browser: browser.execute_script(
             'return document.readyState'
         ) == 'complete'
     )
+
+    rosseti_mr_logger.debug('Дождались загрузки страницы')
+
+    bot_btn = wait.until(
+        EC.element_to_be_clickable((By.ID, "close-iframe-bot"))
+    )
+    bot_btn.click()
+    rosseti_mr_logger.debug('Закрыли бота')
+
+    cookie_btn = wait.until(
+        EC.element_to_be_clickable((By.ID, "cookie-dismiss"))
+    )
+    cookie_btn.click()
+    rosseti_mr_logger.debug('Приняли cookie')
 
     def take_data_from_page() -> date:
         wait.until(
@@ -71,10 +91,13 @@ def rosseti_mr_messages(login: str, password: str, *args) -> DataFrame:
                 message_link = (
                     f'https://lk.rossetimr.ru/{row.get_attribute("href")}'
                 )
-                message_date: str = cells[0].text.strip()
-                message_date: date = (
-                    datetime.strptime(message_date, '%d.%m.%Y').date()
+
+                raw_date = cells[0].text.strip()
+                raw_date = (
+                    raw_date.replace('\n', '').replace(' ', '').rstrip('.')
                 )
+                message_date = datetime.strptime(raw_date, '%d.%m.%Y').date()
+
                 message_address: str = cells[7].text.split('\n')[0].strip()
                 message_internal_number = (
                     message_link.split('?page')[0].split('messages/')[1]
@@ -118,10 +141,14 @@ def rosseti_mr_messages(login: str, password: str, *args) -> DataFrame:
                 )
             )
         )
+        rosseti_mr_logger.info(f'Найдено {len(MESSAGES)} обращений.')
         driver.quit()
+        rosseti_mr_logger.debug('Вышли из браузера')
         return MESSAGES
     except TimeoutException:
         pass
+
+    page_number = 1
 
     try:
         WebDriverWait(driver, PARSING_DELAY).until(
@@ -129,22 +156,28 @@ def rosseti_mr_messages(login: str, password: str, *args) -> DataFrame:
                 (By.XPATH, "//a[contains(@class, 'custom-combobox-toggle')]")
             )
         ).click()
+        rosseti_mr_logger.debug('Нажали на выбор кол-ва элементов на странице')
         WebDriverWait(driver, PARSING_DELAY).until(
             EC.presence_of_element_located(
                 (By.XPATH, "//li[contains(text(), '100')]")
             )
         ).click()
+        rosseti_mr_logger.debug('Выбрали 100 элементов на странице')
         last_page: bool = False
     except TimeoutException:
+        rosseti_mr_logger.debug(f'Стр. {page_number}')
         take_data_from_page()
+        page_number += 1
         last_page: bool = True
 
-    last_page: bool = False
     while not last_page:
         try:
             # if take_data_from_page() < date.today() - timedelta(days=365):
             #     break
             take_data_from_page()
+            rosseti_mr_logger.debug(f'Стр. {page_number}')
+            page_number += 1
+
             WebDriverWait(driver, PARSING_DELAY).until(
                 EC.presence_of_element_located(
                     (
@@ -153,10 +186,15 @@ def rosseti_mr_messages(login: str, password: str, *args) -> DataFrame:
                     )
                 )
             ).click()
+            rosseti_mr_logger.debug('Переключились на следующую страницу')
 
         except TimeoutException:
             last_page = True
 
+    rosseti_mr_logger.info(f'Найдено {len(MESSAGES)} заявок.')
+
     driver.quit()
+
+    rosseti_mr_logger.debug('Вышли из браузера')
 
     return MESSAGES
