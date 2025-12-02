@@ -14,7 +14,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 CURRENT_DIR: str = os.path.dirname(__file__)
 sys.path.append(os.path.join(CURRENT_DIR, '..', '..'))
 from app.common.authorize_form import authorize_form  # noqa: E402
-from app.common.logger import rosseti_mr_logger
+from app.common.logger import rosseti_mr_logger  # noqa: E402
 from app.models.parsing_model import CLAIMS_COLUMNS  # noqa: E402
 
 PARSING_DELAY: int = 5

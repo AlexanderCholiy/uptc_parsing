@@ -473,11 +473,11 @@ if __name__ == '__main__':
     try:
         run_parsing(
             filter_by_last_days=365,
-            # run_oboronenergo=True,
-            # run_rzd=True,
-            # run_portal_tp=True,
-            # run_mosoblenergo=True,
-            # run_sk_tatarstan=True,
+            run_oboronenergo=True,
+            run_rzd=True,
+            run_portal_tp=True,
+            run_mosoblenergo=True,
+            run_sk_tatarstan=True,
             run_rosseti_mr=True,
         )
     finally:
