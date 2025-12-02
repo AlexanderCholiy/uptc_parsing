@@ -363,10 +363,10 @@ def run_parsing(
             instance.parsing(rosseti_mr_claims, save_df),
             filter_by_last_days
         )
-        instance.write_messages_data_to_db(
-            instance.parsing(rosseti_mr_messages, save_df),
-            filter_by_last_days
-        )
+        # instance.write_messages_data_to_db(
+        #     instance.parsing(rosseti_mr_messages, save_df),
+        #     filter_by_last_days
+        # )
 
     rosseti_mr_data = [
         (
@@ -376,97 +376,97 @@ def run_parsing(
             rosseti_mr_settings.NEW_TOWERS_MR_USER_DECLARANT_ID,
             'NEW_TOWERS_MR_1'
         ),
-        (
-            'rosseti_mr_ooo_rb_1',
-            rosseti_mr_settings.OOO_RB_USER_LOGIN_1,
-            rosseti_mr_settings.OOO_RB_USER_PSWD_1,
-            rosseti_mr_settings.OOO_RB_USER_DECLARANT_ID,
-            'OOO_RB_1'
-        ),
-        (
-            'rosseti_mr_rb_1',
-            rosseti_mr_settings.RB_USER_LOGIN_1,
-            rosseti_mr_settings.RB_USER_PSWD_1,
-            rosseti_mr_settings.RB_USER_DECLARANT_ID,
-            'RB_1'
-        ),
-        (
-            'rosseti_mr_pbk_1',
-            rosseti_mr_settings.PBK_USER_LOGIN_1,
-            rosseti_mr_settings.PBK_USER_PSWD_1,
-            rosseti_mr_settings.PBK_USER_DECLARANT_ID,
-            'PBK_1'
-        ),
-        (
-            'rosseti_mr_ooo_capital_pole_1',
-            rosseti_mr_settings.OOO_CAPITAL_POLE_USER_LOGIN_1,
-            rosseti_mr_settings.OOO_CAPITAL_POLE_USER_PSWD_1,
-            rosseti_mr_settings.OOO_CAPITAL_POLE_USER_DECLARANT_ID,
-            'OOO_CAPITAL_POLE_1'
-        ),
-        (
-            'rosseti_mr_nb_mr_srk_telecom_1',
-            rosseti_mr_settings.NB_MR_SRK_TELECOM_1,
-            rosseti_mr_settings.NB_MR_SRK_TELECOM_PSWD_1,
-            rosseti_mr_settings.NB_MR_SRK_TELECOM_USER_DECLARANT_ID,
-            'NB_MR_SRK_TELECOM_1'
-        ),
-        (
-            'rosseti_mr_pbk_srk_telecom_1',
-            rosseti_mr_settings.PBK_SRK_TELECOM_1,
-            rosseti_mr_settings.PBK_SRK_TELECOM_PSWD_1,
-            rosseti_mr_settings.PBK_SRK_TELECOM_USER_DECLARANT_ID,
-            'PBK_SRK_TELECOM_1'
-        ),
-        (
-            'rosseti_mr_rb_srk_telecom_1',
-            rosseti_mr_settings.RB_SRK_TELECOM_1,
-            rosseti_mr_settings.RB_SRK_TELECOM_PSWD_1,
-            rosseti_mr_settings.RB_SRK_TELECOM_USER_DECLARANT_ID,
-            'RB_SRK_TELECOM_1'
-        ),
-        (
-            'rosseti_mr_nb_mr_hardenergy_1',
-            rosseti_mr_settings.NB_MR_HARDENERGY_1,
-            rosseti_mr_settings.NB_MR_HARDENERGY_PSWD_1,
-            rosseti_mr_settings.NB_MR_HARDENERGY_USER_DECLARANT_ID,
-            'NB_MR_HARDENERGY_1'
-        ),
-        (
-            'rosseti_mr_pbk_hardenergy_1',
-            rosseti_mr_settings.PBK_HARDENERGY_1,
-            rosseti_mr_settings.PBK_HARDENERGY_PSWD_1,
-            rosseti_mr_settings.PBK_HARDENERGY_USER_DECLARANT_ID,
-            'PBK_HARDENERGY_1'
-        ),
-        (
-            'rosseti_mr_rb_hardenergy_1',
-            rosseti_mr_settings.RB_HARDENERGY_1,
-            rosseti_mr_settings.RB_HARDENERGY_PSWD_1,
-            rosseti_mr_settings.RB_HARDENERGY_USER_DECLARANT_ID,
-            'RB_HARDENERGY_1'
-        ),
-        (
-            'rosseti_mr_nb_mr_pbk_rb_promising_tech_1',
-            rosseti_mr_settings.NB_MR_PBK_RB_PROMISING_TECH_1,
-            rosseti_mr_settings.NB_MR_PBK_RB_PROMISING_TECH_PSWD_1,
-            rosseti_mr_settings.NB_MR_PBK_RB_PROMISING_TECH_USER_DECLARANT_ID,
-            'NB_MR_PBK_RB_PROMISING_TECH_1'
-        ),
-        (
-            'rosseti_mr_pbk_pmk_1',
-            rosseti_mr_settings.PBK_PMK_1,
-            rosseti_mr_settings.PBK_PMK_PSWD_1,
-            rosseti_mr_settings.PBK_PMK_USER_DECLARANT_ID,
-            'PBK_PMK_1'
-        ),
-        (
-            'rosseti_mr_pbk_infrascom_1',
-            rosseti_mr_settings.PBK_INFRASCOM_1,
-            rosseti_mr_settings.PBK_INFRASCOM_PSWD_1,
-            rosseti_mr_settings.PBK_INFRASCOM_USER_DECLARANT_ID,
-            'PBK_INFRASCOM_1'
-        ),
+        # (
+        #     'rosseti_mr_ooo_rb_1',
+        #     rosseti_mr_settings.OOO_RB_USER_LOGIN_1,
+        #     rosseti_mr_settings.OOO_RB_USER_PSWD_1,
+        #     rosseti_mr_settings.OOO_RB_USER_DECLARANT_ID,
+        #     'OOO_RB_1'
+        # ),
+        # (
+        #     'rosseti_mr_rb_1',
+        #     rosseti_mr_settings.RB_USER_LOGIN_1,
+        #     rosseti_mr_settings.RB_USER_PSWD_1,
+        #     rosseti_mr_settings.RB_USER_DECLARANT_ID,
+        #     'RB_1'
+        # ),
+        # (
+        #     'rosseti_mr_pbk_1',
+        #     rosseti_mr_settings.PBK_USER_LOGIN_1,
+        #     rosseti_mr_settings.PBK_USER_PSWD_1,
+        #     rosseti_mr_settings.PBK_USER_DECLARANT_ID,
+        #     'PBK_1'
+        # ),
+        # (
+        #     'rosseti_mr_ooo_capital_pole_1',
+        #     rosseti_mr_settings.OOO_CAPITAL_POLE_USER_LOGIN_1,
+        #     rosseti_mr_settings.OOO_CAPITAL_POLE_USER_PSWD_1,
+        #     rosseti_mr_settings.OOO_CAPITAL_POLE_USER_DECLARANT_ID,
+        #     'OOO_CAPITAL_POLE_1'
+        # ),
+        # (
+        #     'rosseti_mr_nb_mr_srk_telecom_1',
+        #     rosseti_mr_settings.NB_MR_SRK_TELECOM_1,
+        #     rosseti_mr_settings.NB_MR_SRK_TELECOM_PSWD_1,
+        #     rosseti_mr_settings.NB_MR_SRK_TELECOM_USER_DECLARANT_ID,
+        #     'NB_MR_SRK_TELECOM_1'
+        # ),
+        # (
+        #     'rosseti_mr_pbk_srk_telecom_1',
+        #     rosseti_mr_settings.PBK_SRK_TELECOM_1,
+        #     rosseti_mr_settings.PBK_SRK_TELECOM_PSWD_1,
+        #     rosseti_mr_settings.PBK_SRK_TELECOM_USER_DECLARANT_ID,
+        #     'PBK_SRK_TELECOM_1'
+        # ),
+        # (
+        #     'rosseti_mr_rb_srk_telecom_1',
+        #     rosseti_mr_settings.RB_SRK_TELECOM_1,
+        #     rosseti_mr_settings.RB_SRK_TELECOM_PSWD_1,
+        #     rosseti_mr_settings.RB_SRK_TELECOM_USER_DECLARANT_ID,
+        #     'RB_SRK_TELECOM_1'
+        # ),
+        # (
+        #     'rosseti_mr_nb_mr_hardenergy_1',
+        #     rosseti_mr_settings.NB_MR_HARDENERGY_1,
+        #     rosseti_mr_settings.NB_MR_HARDENERGY_PSWD_1,
+        #     rosseti_mr_settings.NB_MR_HARDENERGY_USER_DECLARANT_ID,
+        #     'NB_MR_HARDENERGY_1'
+        # ),
+        # (
+        #     'rosseti_mr_pbk_hardenergy_1',
+        #     rosseti_mr_settings.PBK_HARDENERGY_1,
+        #     rosseti_mr_settings.PBK_HARDENERGY_PSWD_1,
+        #     rosseti_mr_settings.PBK_HARDENERGY_USER_DECLARANT_ID,
+        #     'PBK_HARDENERGY_1'
+        # ),
+        # (
+        #     'rosseti_mr_rb_hardenergy_1',
+        #     rosseti_mr_settings.RB_HARDENERGY_1,
+        #     rosseti_mr_settings.RB_HARDENERGY_PSWD_1,
+        #     rosseti_mr_settings.RB_HARDENERGY_USER_DECLARANT_ID,
+        #     'RB_HARDENERGY_1'
+        # ),
+        # (
+        #     'rosseti_mr_nb_mr_pbk_rb_promising_tech_1',
+        #     rosseti_mr_settings.NB_MR_PBK_RB_PROMISING_TECH_1,
+        #     rosseti_mr_settings.NB_MR_PBK_RB_PROMISING_TECH_PSWD_1,
+        #     rosseti_mr_settings.NB_MR_PBK_RB_PROMISING_TECH_USER_DECLARANT_ID,
+        #     'NB_MR_PBK_RB_PROMISING_TECH_1'
+        # ),
+        # (
+        #     'rosseti_mr_pbk_pmk_1',
+        #     rosseti_mr_settings.PBK_PMK_1,
+        #     rosseti_mr_settings.PBK_PMK_PSWD_1,
+        #     rosseti_mr_settings.PBK_PMK_USER_DECLARANT_ID,
+        #     'PBK_PMK_1'
+        # ),
+        # (
+        #     'rosseti_mr_pbk_infrascom_1',
+        #     rosseti_mr_settings.PBK_INFRASCOM_1,
+        #     rosseti_mr_settings.PBK_INFRASCOM_PSWD_1,
+        #     rosseti_mr_settings.PBK_INFRASCOM_USER_DECLARANT_ID,
+        #     'PBK_INFRASCOM_1'
+        # ),
     ]
 
     [rosseti_mr(*params) for params in rosseti_mr_data if run_rosseti_mr]
@@ -479,11 +479,11 @@ if __name__ == '__main__':
     try:
         run_parsing(
             filter_by_last_days=365,
-            run_oboronenergo=True,
-            run_rzd=True,
-            run_portal_tp=True,
-            run_mosoblenergo=True,
-            run_sk_tatarstan=True,
+            # run_oboronenergo=True,
+            # run_rzd=True,
+            # run_portal_tp=True,
+            # run_mosoblenergo=True,
+            # run_sk_tatarstan=True,
             run_rosseti_mr=True,
         )
     finally:

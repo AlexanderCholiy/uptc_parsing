@@ -14,6 +14,7 @@ DEFAULT_LOG_MODE = 4 if DEBUG_MODE else 1
 DEFAULT_LOG_LEVEL = DEBUG if DEBUG_MODE else INFO
 
 PORTAL_TP_LOG_FILE = os.path.join(PARSING_LOG_DIR, 'portal_tp.log')
+ROSSETI_MR_LOG_FILE = os.path.join(PARSING_LOG_DIR, 'rosseti_mr.log')
 
 os.makedirs(os.path.dirname(DEFAULT_ROTATING_LOG_FILE), exist_ok=True)
 os.makedirs(PARSING_LOG_DIR, exist_ok=True)

@@ -7,6 +7,7 @@ from .constants import (
     DEFAULT_LOG_MODE,
     DEFAULT_ROTATING_LOG_FILE,
     PORTAL_TP_LOG_FILE,
+    ROSSETI_MR_LOG_FILE,
 )
 from .exceptions import LoggerError
 
@@ -103,6 +104,11 @@ class LoggerFactory:
 
 
 app_logger = LoggerFactory().get_logger()
+
 portal_tp_logger = LoggerFactory(
     'portal_tp_logger', PORTAL_TP_LOG_FILE
+).get_logger()
+
+rosseti_mr_logger = LoggerFactory(
+    'rosseti_mr_logger', ROSSETI_MR_LOG_FILE
 ).get_logger()
